@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>0banai Shop - Custom Anime Edits, Gaming Montages & AE Presets</title>
+    <meta name="description" content="Selling custom video edits and professional After Effects presets.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/fontAwesome.css">
+    <link rel="stylesheet" href="css/light-box.css">
+    <link rel="stylesheet" href="css/templatemo-style.css">
+    <link href="https://fonts.googleapis.com/css?family=Kanit:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+
+    <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">
+        <a href="index.html">0banai<em>Shop</em></a>
+    </div>
+    <div class="menu-icon">
+        <span></span>
+    </div>
+</nav>
+
+<div id="video-container">
+    <div class="video-overlay"></div>
+    <div class="video-content">
+        <div class="inner">
+            <h1>Welcome to <em>0banai Shop</em></h1>
+            <p>Your ultimate source for quality <strong>Video Edits</strong> and <strong>AE Presets</strong>.</p>
+            <p>Explore our products and services below.</p>
+            <div class="scroll-icon">
+                <a class="scrollTo" data-scrollTo="portfolio" href="#"><img src="img/scroll-icon.png" alt="Scroll Down Icon"></a>
+            </div>
+        </div>
+    </div>
+    <video autoplay="" loop="" muted>
+        <source src="BackGroundVideo.mp4" type="video/mp4" />
+    </video>
+</div>
+
+
+<div class="full-screen-portfolio" id="portfolio">
+    <div class="container-fluid" id="portfolio-container">
+        <!-- Les produits seront injectés ici par JavaScript -->
+    </div>
+</div>
+
+
+<footer>
+    <div class="container-fluid">
+        <div class="col-md-12">
+            <p>Copyright &copy; 2025 0banai Shop | Designed by TemplateMo</p>
+        </div>
+    </div>
+</footer>
+
+
+<div class="popup-icon">
+    <button id="modBtn" class="modal-btn"><img src="img/contact-icon.png" alt="Contact Icon"></button>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="header-title">Say hello to <em>0banai Shop</em></h3>
+            <div class="close-btn"><img src="img/close_contact.png" alt="Close Contact Modal"></div>
+        </div>
+        <div class="modal-body">
+            <div class="col-md-6 col-md-offset-3">
+                <form id="contact" action="" method="post">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <fieldset>
+                                <input name="name" type="text" class="form-control" id="name" placeholder="Your name..." required="">
+                            </fieldset>
+                        </div>
+                        <div class="col-md-12">
+                            <fieldset>
+                                <input name="email" type="email" class="form-control" id="email" placeholder="Your email..." required="">
+                            </fieldset>
+                        </div>
+                        <div class="col-md-12">
+                            <fieldset>
+                                <textarea name="message" rows="6" class="form-control" id="message" placeholder="Your request: Custom edit? Specific preset?..." required=""></textarea>
+                            </fieldset>
+                        </div>
+                        <div class="col-md-12">
+                            <fieldset>
+                                <button type="submit" id="form-submit" class="btn">Send Message Now</button>
+                            </fieldset>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Conteneur pour les modales de produits générées dynamiquement -->
+<div id="product-modals-container"></div>
+
+
+<div id="unavailable-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="header-title">Product Availability</h3>
+            <div id="closeUnavailableModal" class="close-btn"><img src="img/close_contact.png" alt="Close Unavailable Modal"></div>
+        </div>
+        <div class="unavailable-modal-content">
+            <h3 id="unavailableTitle">UNAVAILABLE</h3>
+
+            <p style="font-weight: bold;">
+                The <span id="unavailableProductName" style="color: #6ed0e0;">[PRODUCT NAME]</span> is not available for direct purchase at this moment.
+            </p>
+
+            <p>
+                We apologize for the inconvenience. New edits are coming soon!
+            </p>
+
+            <p style="margin-top: 30px;">
+                For custom orders or inquiries about the next restock, please use the contact form below.
+            </p>
+
+            <a href="#" class="btn contact-link-btn" onclick="openContactModal(); return false;">
+                Contact Us Now
+            </a>
+
+        </div>
+    </div>
+</div>
+
+
+<section class="overlay-menu">
+    <div class="container">
+        <div class="row">
+            <div class="main-menu">
+                <ul>
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="about.html">About Me</a>
+                    </li>
+                </ul>
+                <p>Your source for quality edits and presets.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+
+<script src="js/vendor/bootstrap.min.js"></script>
+
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const portfolioContainer = document.getElementById('portfolio-container');
+        const modalsContainer = document.getElementById('product-modals-container');
+
+        // --- 1. CHARGEMENT DYNAMIQUE DES PRODUITS ---
+        fetch('/api/products')
+            .then(response => response.json())
+            .then(products => {
+                let portfolioHtml = '';
+                let modalsHtml = '';
+
+                products.forEach(product => {
+                    // Création de la carte du produit
+                    portfolioHtml += `
+                        <div class="col-md-4 col-sm-6">
+                            <div class="portfolio-item">
+                                <a href="#${product.modal_id}" class="openProductModal" data-modal="${product.modal_id}" data-video="${product.video_preview_id}"><div class="thumb">
+                                    <div class="hover-effect">
+                                        <div class="hover-content">
+                                            <h1><strong>${product.name}</strong></h1>
+                                            <p>Price: <strong>${product.price} eur</strong></p>
+                                        </div>
+                                    </div>
+                                    <div class="image">
+                                        <video id="${product.video_preview_id}" loop muted poster="${product.image}" preload="metadata">
+                                            <source src="${product.video}" type="video/mp4">
+                                        </video>
+                                    </div>
+                                </div></a>
+                            </div>
+                        </div>
+                    `;
+
+                    // Création de la modale du produit
+                    modalsHtml += `
+                        <div id="${product.modal_id}" class="modal product-modal">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="header-title">Purchase: <em>${product.name}</em></h3>
+                                    <div class="close-btn product-close-btn"><img src="img/close_contact.png" alt="Close Product Modal"></div>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="col-md-12 text-center">
+                                        <h2 style="color: #6ed0e0; margin-bottom: 20px;">Price: <strong>${product.price} EURO</strong></h2>
+                                    </div>
+                                    <div class="col-md-4 col-md-offset-4 text-center">
+                                        <video id="modalVideoPreview-${product.video_preview_id}" width="100%" controls loop muted style="margin-bottom: 25px; border-radius: 8px;">
+                                            <source src="${product.video}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        <div class="col-md-12 text-center">
+                                            <a href="#" onclick="openUnavailableModal('${product.name}'); return false;" class="btn buy-button">
+                                                buy now
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                portfolioContainer.innerHTML = portfolioHtml;
+                modalsContainer.innerHTML = modalsHtml;
+
+                // --- 2. RÉ-INITIALISATION DES ÉCOUTEURS D'ÉVÉNEMENTS ---
+                // Une fois le HTML injecté, il faut attacher les événements aux nouveaux éléments
+                initializeEventListeners();
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des produits:', error);
+                portfolioContainer.innerHTML = '<p style="color:white; text-align:center;">Impossible de charger les produits. Vérifiez que le serveur est bien lancé.</p>';
+            });
+
+
+        // Helper function to close any modal
+        function closeModal(modalElement) {
+            if (!modalElement) return;
+            modalElement.style.display = 'none';
+            const videoElement = modalElement.querySelector('video');
+            if (videoElement) {
+                videoElement.pause();
+            }
+        }
+
+        // Function to open the main contact modal
+        window.openContactModal = function() {
+            closeModal(document.getElementById('unavailable-modal'));
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        // Function to open the "Unavailable" modal
+        window.openUnavailableModal = function(productName) {
+            document.querySelectorAll('.product-modal').forEach(modal => {
+                if (modal.style.display === 'block') {
+                    closeModal(modal);
+                }
+            });
+
+            const unavailableModal = document.getElementById('unavailable-modal');
+            if (!unavailableModal) return;
+
+            const productNameSpan = document.getElementById('unavailableProductName');
+            if (productNameSpan) {
+                productNameSpan.textContent = productName;
+            }
+            unavailableModal.style.display = 'block';
+        }
+
+        // Fonction qui attache tous les écouteurs nécessaires
+        function initializeEventListeners() {
+            // Hover sur les vidéos du portfolio
+            document.querySelectorAll('.portfolio-item').forEach(item => {
+                const link = item.querySelector('a.openProductModal');
+                if (link) {
+                    const videoId = link.getAttribute('data-video');
+                    const videoElement = document.getElementById(videoId);
+
+                    if (videoElement) {
+                        item.addEventListener('mouseenter', () => {
+                            if (window.innerWidth > 767) {
+                                videoElement.load();
+                                videoElement.play().catch(error => console.warn("Autoplay bloqué."));
+                            }
+                        });
+
+                        item.addEventListener('mouseleave', () => {
+                            videoElement.pause();
+                            videoElement.currentTime = 0;
+                            videoElement.load();
+                        });
+                    }
+                }
+            });
+
+            // Clic pour ouvrir une modale de produit
+            document.querySelectorAll('.openProductModal').forEach(button => {
+                button.onclick = function(e) {
+                    e.preventDefault();
+                    const modalId = button.getAttribute('data-modal');
+                    const modal = document.getElementById(modalId);
+
+                    if (modal) {
+                        modal.style.display = 'block';
+                        const modalVideo = modal.querySelector('video');
+                        if (modalVideo) {
+                            modalVideo.currentTime = 0;
+                            modalVideo.play();
+                        }
+                    }
+                }
+            });
+
+            // Clic pour fermer les modales
+            document.querySelectorAll('.product-close-btn').forEach(button => {
+                button.onclick = function() {
+                    closeModal(button.closest('.modal'));
+                }
+            });
+        }
+
+        // --- 3. GESTION DES MODALES EXISTANTES (Contact, etc.) ---
+        const unavailableModal = document.getElementById('unavailable-modal');
+        const closeUnavailableButton = document.getElementById('closeUnavailableModal');
+        const mainContactModal = document.getElementById('modal');
+        const closeMainContactButton = mainContactModal ? mainContactModal.querySelector('.close-btn') : null;
+
+        if (closeUnavailableButton) {
+            closeUnavailableButton.onclick = function() { closeModal(unavailableModal); }
+        }
+
+        if (closeMainContactButton) {
+            closeMainContactButton.onclick = function() { closeModal(mainContactModal); }
+        }
+
+        window.onclick = function(event) {
+            document.querySelectorAll('.modal').forEach(modal => {
+                if (event.target === modal) {
+                    closeModal(modal);
+                }
+            });
+        }
+
+        const modBtn = document.getElementById('modBtn');
+        if (modBtn) {
+            modBtn.onclick = function() {
+                if (document.getElementById('modal')) {
+                    document.getElementById('modal').style.display = 'block';
+                }
+            }
+        }
+
+        // --- 4. GESTION DU FORMULAIRE DE CONTACT ---
+        const contactForm = document.getElementById('contact');
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Empêche le rechargement de la page
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            const submitButton = document.getElementById('form-submit');
+            const originalButtonText = submitButton.textContent;
+
+            submitButton.textContent = 'Sending...';
+            submitButton.disabled = true;
+
+            fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, message }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.id) {
+                    alert('Message sent successfully!');
+                    contactForm.reset(); // Vide le formulaire
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            })
+            .finally(() => {
+                submitButton.textContent = originalButtonText;
+                submitButton.disabled = false;
+            });
+        });
+    });
+</script>
+
+
+</body>
+</html>
