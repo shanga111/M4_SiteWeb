@@ -1,2 +1,4 @@
 Serveur démarré sur http://localhost:3000
 Connecté à la base de données SQLite en mémoire.
+Aucun produit trouvé, insertion des produits par défaut.
+Tous les produits par défaut ont été insérés avec succès.

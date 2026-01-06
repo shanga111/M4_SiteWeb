@@ -38,23 +38,44 @@ const db = new sqlite3.Database(':memory:', (err) => {
 
     // Insérer les données initiales
     db.get("SELECT COUNT(*) as count FROM products", (err, row) => {
+      if (err) {
+        console.error("Erreur lors de la vérification des produits existants:", err.message);
+        return;
+      }
       if (row.count === 0) {
-        const products = [
-          { name: 'Leon Edit', price: 5, image: 'img/LEON EDIT.png', video: 'LEON EDIT.mp4', modalId: 'product-modal-leon', videoPreviewId: 'leonVideoPreview' },
-          { name: 'Breaking Bad Edit', price: 5, image: 'img/Breaking bad Edit.png', video: 'Breaking bad Edit.mp4', modalId: 'product-modal-bb', videoPreviewId: 'bbVideoPreview' },
-          { name: 'Blade Runner 2049 Edit', price: 5, image: 'img/Blade Runner 2049 Edit.png', video: 'Blade Runner 2049 Edit.mp4', modalId: 'product-modal-br', videoPreviewId: 'brVideoPreview' },
-          { name: 'Connor Edit', price: 5, image: 'img/Connor Edit.png', video: 'Connor Edit.mp4', modalId: 'product-modal-connor', videoPreviewId: 'connorVideoPreview' },
-          { name: 'Joe Edit', price: 5, image: 'img/Joe Edit.png', video: 'Joe Edit.mp4', modalId: 'product-modal-joe', videoPreviewId: 'joeVideoPreview' },
-          { name: 'Joe Edit V2', price: 5, image: 'img/Joe EditV2.png', video: 'Joe EditV2.mp4', modalId: 'product-modal-joeV2', videoPreviewId: 'joeV2VideoPreview' },
-          { name: 'Dune Edit', price: 5, image: 'img/Dune Goat.png', video: 'Dune Goat.mp4', modalId: 'product-modal-dune', videoPreviewId: 'duneVideoPreview' },
-          { name: 'Spider-Man Edit', price: 5, image: 'img/Spider-Man Edit.png', video: 'Spider-Man Edit.mp4', modalId: 'product-modal-spiderman', videoPreviewId: 'spidermanVideoPreview' },
-          { name: 'Dune Edit V2', price: 5, image: 'img/Dune Edit.png', video: 'Dune Edit.mp4', modalId: 'product-modal-duneV2', videoPreviewId: 'duneV2VideoPreview' }
+        console.log("Aucun produit trouvé, insertion des produits par défaut.");
+        const productNames = [
+          'BladeRunner2049', 'BreakingBad', 'Connor', 'Dune', 'DuneV2',
+          'Joe', 'JoeV2', 'Leon', 'SpiderMan'
         ];
+
         const stmt = db.prepare("INSERT INTO products (name, price, image, video, modal_id, video_preview_id) VALUES (?, ?, ?, ?, ?, ?)");
-        for (const product of products) {
-          stmt.run(product.name, product.price, product.image, product.video, product.modalId, product.videoPreviewId);
+
+        for (const name of productNames) {
+          const product = {
+            name: name,
+            price: 5.00,
+            image: `img/${name}.png`,
+            video: `Video/${name}.mp4`,
+            modalId: `modal-${name}`,
+            videoPreviewId: `video-preview-${name}`
+          };
+          stmt.run(product.name, product.price, product.image, product.video, product.modalId, product.videoPreviewId, (err) => {
+            if (err) {
+              console.error(`Erreur lors de l'insertion de ${name}:`, err.message);
+            }
+          });
         }
-        stmt.finalize();
+
+        stmt.finalize((err) => {
+          if (err) {
+            console.error("Erreur lors de la finalisation de l'instruction:", err.message);
+          } else {
+            console.log("Tous les produits par défaut ont été insérés avec succès.");
+          }
+        });
+      } else {
+        console.log("La base de données contient déjà des produits.");
       }
     });
   });
@@ -92,14 +113,44 @@ app.post('/api/contact', (req, res) => {
 
 // --- Endpoints d'Administration ---
 app.post('/api/products', checkAdmin, (req, res) => {
-    const { name, price, image, video, modal_id, video_preview_id } = req.body;
-    if (!name || !price || !image || !video || !modal_id || !video_preview_id) {
-        return res.status(400).json({ error: 'Tous les champs sont requis.' });
+    const { name, price, image, video } = req.body;
+    if (!name || price === undefined || !image || !video) {
+        return res.status(400).json({ error: 'Les champs nom, prix, image et vidéo sont requis.' });
     }
+
+    const modal_id = `modal-${name}`;
+    const video_preview_id = `video-preview-${name}`;
+
     const sql = 'INSERT INTO products (name, price, image, video, modal_id, video_preview_id) VALUES (?, ?, ?, ?, ?, ?)';
     db.run(sql, [name, price, image, video, modal_id, video_preview_id], function(err) {
         if (err) res.status(500).json({ error: err.message });
         else res.json({ message: 'Produit ajouté avec succès!', id: this.lastID });
+    });
+});
+
+app.put('/api/products/:id', checkAdmin, (req, res) => {
+    const { id } = req.params;
+    const { name, price, image, video } = req.body;
+
+    if (!name || price === undefined || !image || !video) {
+        return res.status(400).json({ error: 'Les champs nom, prix, image et vidéo sont requis.' });
+    }
+
+    const modal_id = `modal-${name}`;
+    const video_preview_id = `video-preview-${name}`;
+
+    const sql = `UPDATE products SET name = ?, price = ?, image = ?, video = ?, modal_id = ?, video_preview_id = ? WHERE id = ?`;
+
+    db.run(sql, [name, price, image, video, modal_id, video_preview_id, id], function(err) {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        if (this.changes === 0) {
+            res.status(404).json({ error: 'Produit non trouvé' });
+            return;
+        }
+        res.json({ message: 'Produit mis à jour avec succès' });
     });
 });
 

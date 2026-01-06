@@ -40,7 +40,9 @@
                         <th>ID</th>
                         <th>Name</th>
                         <th>Price</th>
-                        <th>Action</th>
+                        <th>Image</th>
+                        <th>Video</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="products-list">
@@ -50,8 +52,9 @@
 
             <hr>
 
-            <h2>Add New Product</h2>
-            <form id="add-product-form">
+            <h2 id="form-title">Add New Product</h2>
+            <form id="product-form">
+                <input type="hidden" id="product-id">
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" class="form-control" id="name" required>
@@ -62,13 +65,14 @@
                 </div>
                 <div class="form-group">
                     <label for="image">Image Path</label>
-                    <input type="text" class="form-control" id="image" placeholder="img/image.png" required>
+                    <input type="text" class="form-control" id="image" placeholder="img/image.name.png" required>
                 </div>
                 <div class="form-group">
                     <label for="video">Video Path</label>
-                    <input type="text" class="form-control" id="video" placeholder="video.mp4" required>
+                    <input type="text" class="form-control" id="video" placeholder="Video/video.name.mp4" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Add Product</button>
+                <button type="submit" class="btn btn-primary" id="submit-button">Add Product</button>
+                <button type="button" class="btn btn-secondary" id="cancel-button" style="display: none;">Cancel</button>
             </form>
         </div>
     </div>
@@ -79,6 +83,8 @@
             const adminContent = document.getElementById('admin-content');
             const correctPassword = "admin";
 
+            let productsCache = [];
+
             loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const password = document.getElementById('password').value;
@@ -87,89 +93,123 @@
                     adminContent.style.display = 'block';
                     loadProducts();
                 } else {
-                    alert('Incorrect password!');
+                    alert('Mot de passe incorrect!');
                 }
             });
 
             const productsList = document.getElementById('products-list');
-            const addProductForm = document.getElementById('add-product-form');
+            const productForm = document.getElementById('product-form');
+            const formTitle = document.getElementById('form-title');
+            const submitButton = document.getElementById('submit-button');
+            const cancelButton = document.getElementById('cancel-button');
 
             async function loadProducts() {
                 try {
                     const response = await fetch('/api/products');
-                    const products = await response.json();
-
-                    productsList.innerHTML = '';
-                    products.forEach(product => {
-                        const row = `
-                            <tr>
-                                <td>${product.id}</td>
-                                <td>${product.name}</td>
-                                <td>${product.price} €</td>
-                                <td><button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id})">Delete</button></td>
-                            </tr>
-                        `;
-                        productsList.innerHTML += row;
-                    });
+                    productsCache = await response.json();
+                    renderProducts();
                 } catch (error) {
-                    console.error('Error loading products:', error);
+                    console.error('Erreur lors du chargement des produits:', error);
                 }
             }
 
+            function renderProducts() {
+                productsList.innerHTML = '';
+                productsCache.forEach(product => {
+                    const row = `
+                        <tr>
+                            <td>${product.id}</td>
+                            <td>${product.name}</td>
+                            <td>${product.price} €</td>
+                            <td>${product.image}</td>
+                            <td>${product.video}</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" onclick="editProduct(${product.id})">Modifier</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id})">Supprimer</button>
+                            </td>
+                        </tr>
+                    `;
+                    productsList.innerHTML += row;
+                });
+            }
+
+            window.editProduct = function(id) {
+                const product = productsCache.find(p => p.id === id);
+                if (!product) return;
+
+                document.getElementById('product-id').value = product.id;
+                document.getElementById('name').value = product.name;
+                document.getElementById('price').value = product.price;
+                document.getElementById('image').value = product.image;
+                document.getElementById('video').value = product.video;
+
+                formTitle.textContent = 'Modifier le Produit';
+                submitButton.textContent = 'Enregistrer les modifications';
+                cancelButton.style.display = 'inline-block';
+            }
+
             window.deleteProduct = async function(id) {
-                if (!confirm('Are you sure you want to delete this product?')) return;
+                if (!confirm('Êtes-vous sûr de vouloir supprimer ce produit?')) return;
 
                 try {
                     const response = await fetch(`/api/products/${id}`, {
                         method: 'DELETE',
                         headers: { 'Authorization': correctPassword }
                     });
-                    if (response.ok) {
-                        const result = await response.json();
-                        alert(result.message);
-                        loadProducts();
-                    } else {
-                        const result = await response.json();
-                        alert('Error: ' + result.error);
-                    }
+                    const result = await response.json();
+                    alert(result.message || result.error);
+                    if (response.ok) loadProducts();
                 } catch (error) {
-                    console.error('Error deleting product:', error);
+                    console.error('Erreur lors de la suppression du produit:', error);
                 }
             }
 
-            addProductForm.addEventListener('submit', async (e) => {
+            cancelButton.addEventListener('click', () => {
+                resetForm();
+            });
+
+            function resetForm() {
+                productForm.reset();
+                document.getElementById('product-id').value = '';
+                formTitle.textContent = 'Ajouter un Nouveau Produit';
+                submitButton.textContent = 'Ajouter le Produit';
+                cancelButton.style.display = 'none';
+            }
+
+            productForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const timestamp = Date.now();
-                const newProduct = {
+
+                const id = document.getElementById('product-id').value;
+                const productData = {
                     name: document.getElementById('name').value,
                     price: parseFloat(document.getElementById('price').value),
                     image: document.getElementById('image').value,
                     video: document.getElementById('video').value,
-                    modal_id: 'product-modal-' + timestamp,
-                    video_preview_id: 'videoPreview-' + timestamp
                 };
 
+                const isEditing = !!id;
+                const url = isEditing ? `/api/products/${id}` : '/api/products';
+                const method = isEditing ? 'PUT' : 'POST';
+
                 try {
-                    const response = await fetch('/api/products', {
-                        method: 'POST',
+                    const response = await fetch(url, {
+                        method: method,
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': correctPassword
                         },
-                        body: JSON.stringify(newProduct)
+                        body: JSON.stringify(productData)
                     });
 
+                    const result = await response.json();
+                    alert(result.message || result.error);
+
                     if (response.ok) {
-                        const result = await response.json();
-                        alert(result.message);
-                        addProductForm.reset();
+                        resetForm();
                         loadProducts();
-                    } else {
-                        const result = await response.json();
-                        alert('Error: ' + result.error);
                     }
                 } catch (error) {
-                    console.error('Error adding product:', error);
+                    console.error('Erreur lors de la soumission du formulaire:', error);
                 }
             });
         });
