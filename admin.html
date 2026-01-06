@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Administration - 0banai Shop</title>
+    <title>Admin - 0banai Shop</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <style>
@@ -21,7 +21,7 @@
 <body>
 
     <div class="container">
-        <h1>Administration</h1>
+        <h1>Admin Panel</h1>
 
         <form id="login-form">
             <h2>Login</h2>
@@ -93,7 +93,7 @@
                     adminContent.style.display = 'block';
                     loadProducts();
                 } else {
-                    alert('Mot de passe incorrect!');
+                    alert('Incorrect password!');
                 }
             });
 
@@ -109,7 +109,7 @@
                     productsCache = await response.json();
                     renderProducts();
                 } catch (error) {
-                    console.error('Erreur lors du chargement des produits:', error);
+                    console.error('Error loading products:', error);
                 }
             }
 
@@ -124,8 +124,8 @@
                             <td>${product.image}</td>
                             <td>${product.video}</td>
                             <td>
-                                <button class="btn btn-primary btn-sm" onclick="editProduct(${product.id})">Modifier</button>
-                                <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id})">Supprimer</button>
+                                <button class="btn btn-primary btn-sm" onclick="editProduct(${product.id})">Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteProduct(${product.id})">Delete</button>
                             </td>
                         </tr>
                     `;
@@ -143,13 +143,13 @@
                 document.getElementById('image').value = product.image;
                 document.getElementById('video').value = product.video;
 
-                formTitle.textContent = 'Modifier le Produit';
-                submitButton.textContent = 'Enregistrer les modifications';
+                formTitle.textContent = 'Edit Product';
+                submitButton.textContent = 'Save Changes';
                 cancelButton.style.display = 'inline-block';
             }
 
             window.deleteProduct = async function(id) {
-                if (!confirm('Êtes-vous sûr de vouloir supprimer ce produit?')) return;
+                if (!confirm('Are you sure you want to delete this product?')) return;
 
                 try {
                     const response = await fetch(`/api/products/${id}`, {
@@ -160,7 +160,7 @@
                     alert(result.message || result.error);
                     if (response.ok) loadProducts();
                 } catch (error) {
-                    console.error('Erreur lors de la suppression du produit:', error);
+                    console.error('Error deleting product:', error);
                 }
             }
 
@@ -171,8 +171,8 @@
             function resetForm() {
                 productForm.reset();
                 document.getElementById('product-id').value = '';
-                formTitle.textContent = 'Ajouter un Nouveau Produit';
-                submitButton.textContent = 'Ajouter le Produit';
+                formTitle.textContent = 'Add New Product';
+                submitButton.textContent = 'Add Product';
                 cancelButton.style.display = 'none';
             }
 
@@ -209,7 +209,7 @@
                         loadProducts();
                     }
                 } catch (error) {
-                    console.error('Erreur lors de la soumission du formulaire:', error);
+                    console.error('Error submitting form:', error);
                 }
             });
         });
