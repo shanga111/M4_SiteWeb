@@ -50,7 +50,7 @@
 
 <div class="full-screen-portfolio" id="portfolio">
     <div class="container-fluid" id="portfolio-container">
-        <!-- Les produits seront injectés ici par JavaScript -->
+        <!-- Products will be injected here by JavaScript -->
     </div>
 </div>
 
@@ -105,7 +105,7 @@
     </div>
 </div>
 
-<!-- Conteneur pour les modales de produits générées dynamiquement -->
+<!-- Container for dynamically generated product modals -->
 <div id="product-modals-container"></div>
 
 
@@ -170,7 +170,7 @@
         const portfolioContainer = document.getElementById('portfolio-container');
         const modalsContainer = document.getElementById('product-modals-container');
 
-        // --- 1. CHARGEMENT DYNAMIQUE DES PRODUITS ---
+        // --- 1. DYNAMIC PRODUCT LOADING ---
         fetch('/api/products')
             .then(response => response.json())
             .then(products => {
@@ -178,7 +178,7 @@
                 let modalsHtml = '';
 
                 products.forEach(product => {
-                    // Création de la carte du produit
+                    // Creating the product card
                     portfolioHtml += `
                         <div class="col-md-4 col-sm-6">
                             <div class="portfolio-item">
@@ -186,7 +186,7 @@
                                     <div class="hover-effect">
                                         <div class="hover-content">
                                             <h1><strong>${product.name}</strong></h1>
-                                            <p>Price: <strong>${product.price} eur</strong></p>
+                                            <p>Price: <strong>${product.price} EUR</strong></p>
                                         </div>
                                     </div>
                                     <div class="image">
@@ -199,7 +199,7 @@
                         </div>
                     `;
 
-                    // Création de la modale du produit
+                    // Creating the product modal
                     modalsHtml += `
                         <div id="${product.modal_id}" class="modal product-modal">
                             <div class="modal-content">
@@ -231,13 +231,13 @@
                 portfolioContainer.innerHTML = portfolioHtml;
                 modalsContainer.innerHTML = modalsHtml;
 
-                // --- 2. RÉ-INITIALISATION DES ÉCOUTEURS D'ÉVÉNEMENTS ---
-                // Une fois le HTML injecté, il faut attacher les événements aux nouveaux éléments
+                // --- 2. RE-INITIALIZING EVENT LISTENERS ---
+                // Once the HTML is injected, we need to attach events to the new elements
                 initializeEventListeners();
             })
             .catch(error => {
-                console.error('Erreur lors de la récupération des produits:', error);
-                portfolioContainer.innerHTML = '<p style="color:white; text-align:center;">Impossible de charger les produits. Vérifiez que le serveur est bien lancé.</p>';
+                console.error('Error fetching products:', error);
+                portfolioContainer.innerHTML = '<p style="color:white; text-align:center;">Could not load products. Please ensure the server is running.</p>';
             });
 
 
@@ -275,9 +275,9 @@
             unavailableModal.style.display = 'block';
         }
 
-        // Fonction qui attache tous les écouteurs nécessaires
+        // Function that attaches all necessary listeners
         function initializeEventListeners() {
-            // Hover sur les vidéos du portfolio
+            // Hover over portfolio videos
             document.querySelectorAll('.portfolio-item').forEach(item => {
                 const link = item.querySelector('a.openProductModal');
                 if (link) {
@@ -288,7 +288,7 @@
                         item.addEventListener('mouseenter', () => {
                             if (window.innerWidth > 767) {
                                 videoElement.load();
-                                videoElement.play().catch(error => console.warn("Autoplay bloqué."));
+                                videoElement.play().catch(error => console.warn("Autoplay was blocked."));
                             }
                         });
 
@@ -301,7 +301,7 @@
                 }
             });
 
-            // Clic pour ouvrir une modale de produit
+            // Click to open a product modal
             document.querySelectorAll('.openProductModal').forEach(button => {
                 button.onclick = function(e) {
                     e.preventDefault();
@@ -319,7 +319,7 @@
                 }
             });
 
-            // Clic pour fermer les modales
+            // Click to close modals
             document.querySelectorAll('.product-close-btn').forEach(button => {
                 button.onclick = function() {
                     closeModal(button.closest('.modal'));
@@ -327,7 +327,7 @@
             });
         }
 
-        // --- 3. GESTION DES MODALES EXISTANTES (Contact, etc.) ---
+        // --- 3. HANDLING EXISTING MODALS (Contact, etc.) ---
         const unavailableModal = document.getElementById('unavailable-modal');
         const closeUnavailableButton = document.getElementById('closeUnavailableModal');
         const mainContactModal = document.getElementById('modal');
@@ -358,10 +358,10 @@
             }
         }
 
-        // --- 4. GESTION DU FORMULAIRE DE CONTACT ---
+        // --- 4. CONTACT FORM HANDLING ---
         const contactForm = document.getElementById('contact');
         contactForm.addEventListener('submit', function(e) {
-            e.preventDefault(); // Empêche le rechargement de la page
+            e.preventDefault(); // Prevents page reload
 
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
@@ -383,7 +383,7 @@
             .then(data => {
                 if (data.id) {
                     alert('Message sent successfully!');
-                    contactForm.reset(); // Vide le formulaire
+                    contactForm.reset(); // Clears the form
                 } else {
                     alert('Error: ' + data.error);
                 }
