@@ -56,7 +56,7 @@ const db = new sqlite3.Database(':memory:', (err) => {
             name: name,
             price: 5.00,
             image: `img/${name}.png`,
-            video: `Video/${name}.mp4`,
+            video: `video/${name}.mp4`,
             modalId: `modal-${name}`,
             videoPreviewId: `video-preview-${name}`
           };
