@@ -40,15 +40,15 @@ const db = new sqlite3.Database(':memory:', (err) => {
     db.get("SELECT COUNT(*) as count FROM products", (err, row) => {
       if (row.count === 0) {
         const products = [
-          { name: 'Leon Edit', price: 5, image: 'img/LEON EDIT.png', video: 'LEON EDIT.mp4', modalId: 'product-modal-leon', videoPreviewId: 'leonVideoPreview' },
-          { name: 'Breaking Bad Edit', price: 5, image: 'img/Breaking bad Edit.png', video: 'Breaking bad Edit.mp4', modalId: 'product-modal-bb', videoPreviewId: 'bbVideoPreview' },
-          { name: 'Blade Runner 2049 Edit', price: 5, image: 'img/Blade Runner 2049 Edit.png', video: 'Blade Runner 2049 Edit.mp4', modalId: 'product-modal-br', videoPreviewId: 'brVideoPreview' },
-          { name: 'Connor Edit', price: 5, image: 'img/Connor Edit.png', video: 'Connor Edit.mp4', modalId: 'product-modal-connor', videoPreviewId: 'connorVideoPreview' },
-          { name: 'Joe Edit', price: 5, image: 'img/Joe Edit.png', video: 'Joe Edit.mp4', modalId: 'product-modal-joe', videoPreviewId: 'joeVideoPreview' },
-          { name: 'Joe Edit V2', price: 5, image: 'img/Joe EditV2.png', video: 'Joe EditV2.mp4', modalId: 'product-modal-joeV2', videoPreviewId: 'joeV2VideoPreview' },
-          { name: 'Dune Edit', price: 5, image: 'img/Dune Goat.png', video: 'Dune Goat.mp4', modalId: 'product-modal-dune', videoPreviewId: 'duneVideoPreview' },
-          { name: 'Spider-Man Edit', price: 5, image: 'img/Spider-Man Edit.png', video: 'Spider-Man Edit.mp4', modalId: 'product-modal-spiderman', videoPreviewId: 'spidermanVideoPreview' },
-          { name: 'Dune Edit V2', price: 5, image: 'img/Dune Edit.png', video: 'Dune Edit.mp4', modalId: 'product-modal-duneV2', videoPreviewId: 'duneV2VideoPreview' }
+          { name: 'Leon Edit', price: 5, image: 'img/LEON EDIT.png', video: 'video/Leon.mp4', modalId: 'product-modal-leon', videoPreviewId: 'leonVideoPreview' },
+          { name: 'Breaking Bad Edit', price: 5, image: 'img/Breaking bad Edit.png', video: 'video/BreakingBad.mp4', modalId: 'product-modal-bb', videoPreviewId: 'bbVideoPreview' },
+          { name: 'Blade Runner 2049 Edit', price: 5, image: 'img/Blade Runner 2049 Edit.png', video: 'video/BladeRunner2049.mp4', modalId: 'product-modal-br', videoPreviewId: 'brVideoPreview' },
+          { name: 'Connor Edit', price: 5, image: 'img/Connor Edit.png', video: 'video/Connor.mp4', modalId: 'product-modal-connor', videoPreviewId: 'connorVideoPreview' },
+          { name: 'Joe Edit', price: 5, image: 'img/Joe Edit.png', video: 'video/Joe.mp4', modalId: 'product-modal-joe', videoPreviewId: 'joeVideoPreview' },
+          { name: 'Joe Edit V2', price: 5, image: 'img/Joe EditV2.png', video: 'video/JoeV2.mp4', modalId: 'product-modal-joeV2', videoPreviewId: 'joeV2VideoPreview' },
+          { name: 'Dune Edit', price: 5, image: 'img/Dune Goat.png', video: 'video/Dune.mp4', modalId: 'product-modal-dune', videoPreviewId: 'duneVideoPreview' },
+          { name: 'Spider-Man Edit', price: 5, image: 'img/Spider-Man Edit.png', video: 'video/SpiderMan.mp4', modalId: 'product-modal-spiderman', videoPreviewId: 'spidermanVideoPreview' },
+          { name: 'Dune Edit V2', price: 5, image: 'img/Dune Edit.png', video: 'video/DuneV2.mp4', modalId: 'product-modal-duneV2', videoPreviewId: 'duneV2VideoPreview' }
         ];
         const stmt = db.prepare("INSERT INTO products (name, price, image, video, modal_id, video_preview_id) VALUES (?, ?, ?, ?, ?, ?)");
         for (const product of products) {
