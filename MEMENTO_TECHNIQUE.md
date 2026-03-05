@@ -45,7 +45,7 @@ L'application repose sur une architecture client-serveur standard, avec une sép
 |-- img/                  # Images statiques et produits
 |-- js/                   # Scripts JS client (plugins, main.js)
 |-- node_modules/         # Dépendances (géré par npm)
-|-- Video/                # Vidéos des produits
+|-- video/                # Vidéos des produits
 |
 |-- .gitignore            # Fichier pour ignorer les fichiers non versionnés
 |-- admin.html            # Panneau d'administration (interface CRUD)
