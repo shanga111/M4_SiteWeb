@@ -318,7 +318,7 @@
         const unavailableModal = document.getElementById('unavailable-modal');
         if (!unavailableModal) return;
 
-        // Mise à jour du nom du produit dans la modale
+        // Update the product name in the modal
         const productNameSpan = document.getElementById('unavailableProductName');
         if (productNameSpan) {
             productNameSpan.textContent = productName;
@@ -335,7 +335,7 @@
         const closeUnavailableBtn = document.getElementById('closeUnavailableModal');
         const modBtn = document.getElementById('modBtn');
 
-        // Open modal via ModBtn (bouton flottant)
+        // Open modal via ModBtn (floating button)
         if (modBtn && mainContactModal) {
             modBtn.onclick = function() {
                 mainContactModal.style.display = 'block';
