@@ -390,35 +390,36 @@ nav {
 
 .full-screen-portfolio .col-md-4,
 .full-screen-portfolio .col-sm-6 {
-    /* 1. Définir une hauteur fixe basée sur la largeur de la colonne (100% largeur = 30vw) */
-    /* Cela force l'élément conteneur à être carré */
-    height: 30vw;
-    overflow: hidden; /* Empêche l'image/vidéo de dépasser si mal ajustée */
+    height: 33.333vw; /* 3 colonnes sur desktop */
+    overflow: hidden;
 }
 
 .full-screen-portfolio .portfolio-item,
 .full-screen-portfolio .portfolio-item .thumb,
 .full-screen-portfolio .portfolio-item .thumb .image {
-    /* Assure que les conteneurs internes prennent toute la place */
     height: 100%;
 }
 
 .full-screen-portfolio .portfolio-item .thumb .image img,
 .full-screen-portfolio .portfolio-item .thumb .image video {
-    /* 2. S'assurer que les médias (images/vidéos) couvrent bien le carré */
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Recadre si nécessaire pour couvrir tout le conteneur */
+    object-fit: cover;
     display: block;
 }
 
-/* 3. Ajustement pour les petits écrans (tablette/mobile) */
+/* Tablette : 2 colonnes */
+@media screen and (max-width: 991px) {
+    .full-screen-portfolio .col-sm-6 {
+        height: 50vw;
+    }
+}
+
+/* Mobile : 1 colonne */
 @media screen and (max-width: 767px) {
     .full-screen-portfolio .col-md-4,
     .full-screen-portfolio .col-sm-6 {
-        /* En mobile, les colonnes prennent souvent 100% de la largeur, donc 50vw pour le format carré */
-        /* Si vous utilisez des colonnes de 50%, alors 50vw est approprié. Si 100%, utilisez 100vw. */
-        height: 50vw;
+        height: 100vw;
     }
 }
 
@@ -543,6 +544,13 @@ nav {
     margin-top: 5%;
     border-bottom: none;
     margin-bottom: 20px;
+}
+
+@media screen and (max-width: 767px) {
+    .modal-header h3 {
+        font-size: 32px;
+        margin-top: 10%;
+    }
 }
 
 .modal-header em {
@@ -1442,14 +1450,4 @@ footer a:hover {
         text-align: center;
     }
 
-}
-
-/* Ajustement pour les petits écrans (tablette/mobile) dans la grille 1:1 */
-@media screen and (max-width: 767px) {
-    .full-screen-portfolio .col-md-4,
-    .full-screen-portfolio .col-sm-6 {
-        /* Comme les colonnes prennent 100% de la largeur sur petit écran, nous utilisons 100vw ou le pourcentage de la colonne */
-        /* Si vous utilisez des colonnes de 50% sur mobile, 50vw est correct. Gardons 50vw pour les écrans < 768px */
-        height: 50vw;
-    }
 }

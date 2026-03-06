@@ -3,7 +3,7 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
@@ -56,7 +56,7 @@ const db = new sqlite3.Database(':memory:', (err) => {
             name: name,
             price: 5.00,
             image: `img/${name}.png`,
-            video: `Video/${name}.mp4`,
+            video: `video/${name}.mp4`,
             modalId: `modal-${name}`,
             videoPreviewId: `video-preview-${name}`
           };

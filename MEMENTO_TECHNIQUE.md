@@ -45,7 +45,7 @@ L'application repose sur une architecture client-serveur standard, avec une sép
 |-- img/                  # Images statiques et produits
 |-- js/                   # Scripts JS client (plugins, main.js)
 |-- node_modules/         # Dépendances (géré par npm)
-|-- Video/                # Vidéos des produits
+|-- video/                # Vidéos des produits (dossier standardisé)
 |
 |-- .gitignore            # Fichier pour ignorer les fichiers non versionnés
 |-- admin.html            # Panneau d'administration (interface CRUD)
@@ -170,6 +170,7 @@ Ce projet a été une excellente opportunité d'apprentissage. Il a permis de so
 -   La fonctionnalité CRUD complète et fonctionnelle.
 -   L'automatisation du remplissage de la base de données.
 -   La création d'une interface d'administration réactive.
+-   **Architecture Responsive** : Grille adaptative (3, 2 ou 1 colonne) et modaux optimisés pour mobile.
 
 **Axes d'amélioration possibles :**
 1.  **Sécurité :** L'authentification actuelle est basique. Une amélioration majeure serait d'implémenter un système basé sur des jetons (JWT) ou des sessions avec des mots de passe hachés.
