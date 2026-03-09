@@ -46,15 +46,16 @@ const db = new sqlite3.Database('portfolio.db', (err) => {
       if (row.count === 0) {
         console.log("No portfolio items found, inserting default items.");
         const items = [
-          { name: 'BladeRunner2049', wide: 1 },
-          { name: 'BreakingBad', wide: 0 },
-          { name: 'Connor', wide: 0 },
-          { name: 'Dune', wide: 1 },
-          { name: 'DuneV2', wide: 1 },
-          { name: 'Joe', wide: 0 },
-          { name: 'JoeV2', wide: 0 },
-          { name: 'Leon', wide: 0 },
-          { name: 'SpiderMan', wide: 0 }
+          { name: 'BladeRunnerEdit', wide: 0 },
+          { name: 'DarkEdit', wide: 0 },
+          { name: 'DarkEdit2', wide: 0 },
+          { name: 'DarthVaderEdit', wide: 0 },
+          { name: 'EllieEdit', wide: 0 },
+          { name: 'GoldenBrownEdit', wide: 0 },
+          { name: 'Gun-WooEdit', wide: 0 },
+          { name: 'LaraEdit', wide: 0 },
+          { name: 'AizenEdit', wide: 0 },
+          { name: 'LegoStopMotion(Brickfilm)', wide: 1 }
         ];
 
         const stmt = db.prepare("INSERT INTO products (name, image, video, modal_id, video_preview_id, is_wide, comments) VALUES (?, ?, ?, ?, ?, ?, ?)");
