@@ -423,6 +423,18 @@ nav {
     }
 }
 
+/* Format large (16:9) pour certains items (ex: Lego) */
+.full-screen-portfolio .wide-item {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9;
+}
+
+.full-screen-portfolio .wide-item .portfolio-item .thumb .image video {
+    object-fit: contain;
+    background: #000;
+}
+
 /* -------------------------------------- */
 /* FIN MODIFICATIONS POUR LE FORMAT 1:1   */
 /* -------------------------------------- */
@@ -432,46 +444,6 @@ nav {
 /* DÉBUT STYLES AJOUTÉS POUR 0BANAI SHOP */
 /* -------------------------------------- */
 
-/* Styles pour les boutons d'achat dans les Modales */
-.btn.buy-button {
-    background-color: #6ed0e0; /* Couleur bleue/cyan du thème */
-    border-color: #6ed0e0;
-    padding: 10px 30px;
-    font-size: 16px;
-    text-transform: lowercase;
-}
-
-/* Styles pour la Modale d'indisponibilité (Unavailable Modal) */
-.unavailable-modal-content {
-    text-align: center;
-    padding: 30px 20px;
-}
-.unavailable-modal-content h3 {
-    color: #e74c3c; /* Couleur rouge d'alerte */
-    font-size: 2.2em;
-    margin-bottom: 25px;
-}
-.unavailable-modal-content p {
-    font-size: 1.1em;
-    line-height: 1.6;
-    margin-bottom: 15px;
-    color: #ddd; /* Rendre le texte plus clair sur fond foncé */
-}
-/* Style pour le nouveau bouton de contact dans la modale d'indisponibilité */
-.btn.contact-link-btn {
-    background-color: #f39c12; /* Couleur orange pour l'action secondaire */
-    border-color: #f39c12;
-    color: white;
-    padding: 12px 30px;
-    margin-top: 25px;
-    font-size: 1.1em;
-    text-transform: uppercase;
-    transition: all 0.5s;
-}
-.btn.contact-link-btn:hover {
-    background-color: #e67e22; /* Assombrir au survol */
-    border-color: #e67e22;
-}
 
 /* -------------------------------------- */
 /* FIN STYLES AJOUTÉS POUR 0BANAI SHOP */

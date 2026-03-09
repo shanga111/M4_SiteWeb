@@ -1,179 +1,108 @@
-# Mémento Technique - Projet Site Web Dynamique
+# Mémento Technique - Portfolio ERACOM
 
 **Module:** EST - FOR - 004 - Technologie du WEB
 **Auteur:** Shanga
-**Date:** 21.05.2024
+**Date:** 06.03.2025
 
 ---
 
 ## 1. Introduction
 
-Ce document constitue le mémento technique détaillé du projet de site web dynamique, réalisé dans le cadre du module "Technologie du WEB". L'objectif central était de faire évoluer un site portfolio statique en une application web complète et dynamique, en s'appuyant sur des technologies côté serveur pour la gestion de contenu, la persistance des données et les interactions avec les utilisateurs.
+Ce document constitue le mémento technique détaillé du projet de portfolio dynamique, réalisé dans le cadre du module "Technologie du WEB". L'objectif central était de faire évoluer un site portfolio statique en une application web complète et dynamique, en s'appuyant sur des technologies côté serveur pour la gestion de contenu, la persistance des données et les interactions.
 
-Le projet final est une boutique en ligne fonctionnelle pour des montages vidéo et des presets, dotée d'une interface d'administration sécurisée permettant une gestion complète des produits (Ajout, Modification, Suppression). Ce document a pour but d'expliciter les choix technologiques, de détailler l'architecture mise en place et de fournir un guide pour le déploiement et la maintenance de l'application.
+Le projet final est un **Portfolio ERACOM** présentant des projets vidéo. Il dispose d'une interface d'administration sécurisée permettant une gestion complète des projets (Ajout, Modification, Suppression) et de fonctionnalités interactives avancées (son au survol, lecture automatique mobile).
 
 ### 1.1. Objectifs Pédagogiques et Techniques
 Le cahier des charges du module imposait de remplir les objectifs suivants :
 -   **Choix d'une stack technologique :** Sélectionner un serveur web (Node.js), un langage de programmation (JavaScript) et un framework (Express.js).
--   **Intégration d'une base de données :** Mettre en place et gérer une base de données (SQLite) pour stocker les informations des produits et les messages des utilisateurs.
--   **Développement d'une application fonctionnelle :** Créer une application web dynamique servant d'exemple concret, incluant une API RESTful et une interface de gestion.
--   **Rédaction d'un mémento technique :** Produire une documentation exhaustive (ce document) qui détaille tous les aspects techniques du projet.
+-   **Intégration d'une base de données :** Mettre en place une base de données persistante (SQLite) pour stocker les informations des projets.
+-   **Développement d'une application fonctionnelle :** Créer une application web dynamique incluant une API RESTful et une interface de gestion.
+-   **Rédaction d'un mémento technique :** Produire une documentation exhaustive détaillant tous les aspects techniques.
 
 ### 1.2. Justification des Technologies Choisies
 
 -   **Node.js & Express.js :**
-    -   **Performance :** L'architecture non bloquante de Node.js est idéale pour des applications I/O intensives comme un serveur web qui doit gérer de nombreuses requêtes simultanées.
-    -   **Écosystème :** L'écosystème npm offre une vaste bibliothèque de modules qui simplifient le développement. Express.js, en particulier, est un framework minimaliste mais puissant qui accélère la création de serveurs web et d'API.
-    -   **Cohérence du langage :** Utiliser JavaScript à la fois pour le frontend et le backend permet une meilleure synergie et simplifie le processus de développement.
+    -   **Performance :** Architecture non bloquante idéale pour gérer les requêtes simultanées.
+    -   **Écosystème :** npm offre une vaste bibliothèque de modules (express, sqlite3).
+    -   **Cohérence :** JavaScript utilisé pour le frontend et le backend.
 
--   **SQLite (en mémoire) :**
-    -   **Simplicité :** Contrairement à des SGBD plus complexes comme MySQL ou PostgreSQL qui nécessitent un serveur dédié, SQLite est basé sur un fichier (ou, dans notre cas, en mémoire), ce qui le rend extrêmement simple à configurer et à utiliser pour le développement. Il n'y a aucune installation ou configuration de service requise.
-    -   **Légèreté :** C'est une solution très légère, parfaite pour des projets de petite envergure ou pour des phases de prototypage rapide.
-    -   **Mode "en mémoire" :** Pour ce projet, le mode `:memory:` a été choisi pour garantir que l'application se réinitialise à un état propre à chaque démarrage. C'est un avantage majeur pour les tests et la démonstration, car cela assure une expérience utilisateur prévisible sans avoir à gérer des données persistantes entre les sessions.
+-   **SQLite (Persistant) :**
+    -   **Simplicité :** SGBD basé sur un fichier (`portfolio.db`), ne nécessitant pas de serveur dédié.
+    -   **Persistance :** Contrairement à une base en mémoire, les modifications apportées via l'interface d'administration sont conservées après un redémarrage du serveur.
+    -   **Légèreté :** Parfait pour un portfolio personnel avec un volume de données modéré.
 
 ---
 
 ## 2. Architecture et Structure du Projet
 
-L'application repose sur une architecture client-serveur standard, avec une séparation claire entre la logique de présentation (frontend) et la logique métier (backend).
+L'application repose sur une séparation claire entre la logique de présentation (frontend) et la logique métier (backend).
 
 ### 2.1. Structure Détaillée des Fichiers
 ```
 /
-|-- css/                  # Styles (Bootstrap, template custom)
-|-- fonts/                # Polices web
-|-- img/                  # Images statiques et produits
-|-- js/                   # Scripts JS client (plugins, main.js)
-|-- node_modules/         # Dépendances (géré par npm)
-|-- video/                # Vidéos des produits (dossier standardisé)
+|-- css/                  # Styles (Bootstrap, template custom, responsive grid)
+|-- img/                  # Images de poster pour les vidéos
+|-- js/                   # Scripts JS client
+|-- video/                # Vidéos des projets (dossier standardisé)
 |
-|-- .gitignore            # Fichier pour ignorer les fichiers non versionnés
-|-- admin.html            # Panneau d'administration (interface CRUD)
-|-- index.html            # Page principale (vitrine des produits)
-|-- about.html            # Page statique "À propos"
-|-- server.js             # Cœur du backend (Express, API, DB)
-|-- package.json          # Fichier de configuration du projet npm
-|-- package-lock.json     # Versions exactes des dépendances
+|-- admin.html            # Panneau d'administration (interface CRUD en français)
+|-- index.html            # Page principale (Portfolio dynamique)
+|-- about.html            # Page "À propos" (Parcours ERACOM)
+|-- server.js             # Backend (Express, API REST, SQLite)
+|-- portfolio.db          # Base de données SQLite persistante
+|-- package.json          # Configuration npm
 |-- MEMENTO_TECHNIQUE.md  # Ce document
-...
 ```
 
 ### 2.2. Architecture Backend (server.js)
 
-Le fichier `server.js` est le point d'entrée et le contrôleur central de toute l'application.
+Le fichier `server.js` est le contrôleur central de l'application.
 
-1.  **Serveur Express :** Il initialise le serveur, configure les middlewares (comme `express.json()` pour parser le JSON) et met l'application en écoute sur le port 3000.
-2.  **Base de Données SQLite :** Il établit la connexion à la base de données en mémoire.
-3.  **Initialisation et Seeding :** Au lancement, il exécute un script `db.serialize()` qui :
-    -   Crée les tables `products` et `messages` avec les schémas appropriés.
-    -   Vérifie si la table `products` est vide. Si c'est le cas, il la peuple avec 9 produits par défaut. Ce processus de "seeding" automatique garantit que l'application est toujours fonctionnelle et présentable dès le démarrage.
-4.  **API RESTful :** Une API complète est définie pour permettre au frontend de manipuler les données.
+1.  **Serveur Express :** Configure les middlewares et sert les fichiers statiques.
+2.  **Base de Données SQLite :** Établit la connexion au fichier `portfolio.db`.
+3.  **Initialisation et Seeding :** Au premier lancement (si la table est vide), il peuple la base avec 10 projets par défaut (dont un projet Lego au format 16:9).
+4.  **API RESTful :**
+    -   `GET /api/products`: Récupère la liste des projets.
+    -   `POST /api/contact`: Enregistre les messages de contact.
+    -   `POST /api/products`: Ajoute un projet (protégé par mot de passe).
+    -   `PUT /api/products/:id`: Modifie un projet (protégé).
+    -   `DELETE /api/products/:id`: Supprime un projet (protégé).
 
-#### Points de Terminaison de l'API (détaillés)
+### 2.3. Architecture Frontend et Fonctionnalités
 
--   `GET /api/products`: Récupère tous les produits.
--   `POST /api/contact`: Enregistre un message de contact dans la DB.
--   `POST /api/products`: Ajoute un produit (protégé).
--   `PUT /api/products/:id`: Met à jour un produit (protégé).
--   `DELETE /api/products/:id`: Supprime un produit (protégé).
-
-#### Mécanisme de Sécurité
-La sécurité des routes d'administration est assurée par le middleware `checkAdmin`. À chaque requête sur une route protégée, ce middleware intercepte la requête et vérifie la présence de l'en-tête `Authorization`. Si la valeur est `admin`, il passe le contrôle à la fonction suivante (`next()`). Sinon, il renvoie une erreur `401 Unauthorized`, bloquant ainsi l'accès.
-
-### 2.3. Architecture Frontend
-
-Le frontend utilise du JavaScript "vanilla" (pur) et jQuery pour interagir avec le backend via l'API.
-
-1.  **`index.html` :** La page charge dynamiquement les produits via un appel `fetch('/api/products')`. Le JSON reçu est ensuite utilisé pour construire le HTML des cartes de produits et des modales correspondantes, qui sont injectés dans le DOM.
-2.  **`admin.html` :** Cette page est une "Single Page Application" (SPA) miniature. Après une simple authentification par mot de passe (gérée côté client), l'interface de gestion est affichée. L'intégralité des opérations (afficher, ajouter, modifier, supprimer) se fait via des appels `fetch` à l'API, sans jamais recharger la page. Le formulaire de la page change de comportement (passant de `POST` à `PUT`) en fonction du contexte (création ou modification).
+1.  **Grille Responsive Dynamique :** Utilisation de `vw` (viewport width) pour garantir des vignettes carrées (1:1) sur tous les écrans, avec une adaptation du nombre de colonnes (3 sur PC, 2 sur Tablette, 1 sur Mobile).
+2.  **Interactions Audio-Visuelles :**
+    -   **Son au survol :** Sur Desktop, le survol d'une vignette active la vidéo avec le son (`muted = false`).
+    -   **Autoplay Mobile :** Utilisation de l'API `IntersectionObserver` pour lancer automatiquement la lecture de la vidéo la plus visible à l'écran sur mobile.
+    -   **Modales de Projet :** Affichent la vidéo en grand avec une section de commentaires/notes techniques extraite de la base de données.
+3.  **Interface d'Administration :** Permet de gérer les projets, de définir si un projet doit s'afficher en format large (16:9) et d'éditer les commentaires techniques.
 
 ---
 
-## 3. Déploiement et Guide d'Utilisation
+## 3. Guide d'Installation et Utilisation
 
 ### 3.1. Prérequis
--   **Node.js :** Version 14.x ou supérieure.
--   **npm :** Généralement inclus avec Node.js.
+-   **Node.js** (v14+) et **npm**.
 
-### 3.2. Procédure d'Installation Détaillée
+### 3.2. Installation
+1.  Installer les dépendances : `npm install`
+2.  Démarrer le serveur : `npm start` (ou `node server.js`)
+3.  Accéder au site : `http://localhost:3000`
 
-1.  **Clonage du Dépôt :**
-    ```bash
-    git clone <URL_DU_DEPOT>
-    cd <NOM_DU_DEPOT>
-    ```
-
-2.  **Installation des Dépendances (`npm install`) :**
-    Cette commande lit le fichier `package.json` et télécharge les dépendances requises dans le dossier `node_modules`.
-    -   **`express` :** Le framework web pour construire le serveur et l'API.
-    -   **`sqlite3` :** Le pilote Node.js pour interagir avec la base de données SQLite.
-    La commande génère également le fichier `package-lock.json`, qui garantit que les mêmes versions des dépendances sont utilisées lors de futures installations, assurant ainsi la reproductibilité de l'environnement.
-
-### 3.3. Démarrage de l'Application
-```bash
-node server.js
-```
-Une fois lancée, la console affichera :
--   `Server started on http://localhost:3000`
--   `Connected to the in-memory SQLite database.`
--   Des logs indiquant si la base de données a été pré-remplie.
-
-### 3.4. Utilisation
--   **Site public :** Ouvrir `http://localhost:3000` dans un navigateur.
--   **Panneau Admin :** Naviguer vers `http://localhost:3000/admin.html`. Entrer le mot de passe `admin` pour accéder à l'interface de gestion.
+### 3.3. Administration
+-   URL : `http://localhost:3000/admin.html`
+-   Mot de passe par défaut : `admin`
 
 ---
 
-## 4. Analyse du Code et Décisions d'Implémentation
+## 4. Analyse et Auto-évaluation
 
-### 4.1. `server.js` : Automatisation et Robustesse
+### 4.1. Points Forts de l'Implémentation
+-   **Expérience Utilisateur (UX) :** Le son au survol et l'autoplay intelligent sur mobile rendent le portfolio très dynamique.
+-   **Robustesse Technique :** La base de données persistante permet une véritable gestion de contenu.
+-   **Design Adaptatif :** La grille fluide gère parfaitement les différents formats (carré vs 16:9).
 
-#### Pré-remplissage de la Base de Données
-```javascript
-db.get("SELECT COUNT(*) as count FROM products", (err, row) => {
-  if (row.count === 0) {
-    const stmt = db.prepare(...);
-    productNames.forEach(name => stmt.run(...));
-    stmt.finalize();
-  }
-});
-```
-L'utilisation d'une requête `COUNT(*)` avant l'insertion est une pratique robuste. Elle évite la duplication de données si le serveur est redémarré dans un contexte où la base de données serait persistante. L'utilisation de `db.prepare()` est une optimisation qui pré-compile la requête SQL, la rendant plus performante lors d'exécutions multiples (ici, dans une boucle).
-
-### 4.2. `admin.html` : Interface Réactive sans Framework
-
-La logique de `admin.html` démontre comment créer une interface dynamique sans dépendre d'un framework lourd comme React ou Vue.
-
-#### Gestion d'État du Formulaire
-```javascript
-const isEditing = !!document.getElementById('product-id').value;
-const url = isEditing ? `/api/products/${id}` : '/api/products';
-const method = isEditing ? 'PUT' : 'POST';
-```
-Cette approche simple permet de réutiliser le même formulaire pour deux opérations distinctes. L'état est simplement stocké dans un champ `<input type="hidden">`. C'est une technique légère et efficace pour des applications de cette taille.
-
----
-
-## 5. Appréciation et Auto-évaluation
-
-### 5.1. Respect de l'Implémentation Professionnelle
-Le projet adhère à plusieurs pratiques professionnelles :
--   **Séparation des préoccupations :** Le code backend (`server.js`) est clairement séparé de la présentation (`.html`).
--   **API RESTful :** L'utilisation de méthodes HTTP sémantiques (`GET`, `POST`, `PUT`, `DELETE`) suit les conventions REST.
--   **Gestion des dépendances :** L'utilisation de `package.json` permet une gestion propre et reproductible des dépendances.
--   **Code Asynchrone :** L'utilisation de `fetch` avec `async/await` dans le frontend modernise la gestion des requêtes asynchrones.
-
-### 5.2. Auto-évaluation et Pistes d'Amélioration
-Ce projet a été une excellente opportunité d'apprentissage. Il a permis de solidifier ma compréhension des architectures client-serveur, de la création d'API et de la manipulation dynamique du DOM.
-
-**Points forts :**
--   La fonctionnalité CRUD complète et fonctionnelle.
--   L'automatisation du remplissage de la base de données.
--   La création d'une interface d'administration réactive.
--   **Architecture Responsive** : Grille adaptative (3, 2 ou 1 colonne) et modaux optimisés pour mobile.
-
-**Axes d'amélioration possibles :**
-1.  **Sécurité :** L'authentification actuelle est basique. Une amélioration majeure serait d'implémenter un système basé sur des jetons (JWT) ou des sessions avec des mots de passe hachés.
-2.  **Validation des données :** Ajouter une validation plus stricte des données, à la fois côté client et côté serveur (par exemple, avec une bibliothèque comme `Joi` ou `express-validator`).
-3.  **Gestion des erreurs :** Mettre en place un middleware de gestion des erreurs plus centralisé dans Express pour éviter la répétition de code.
-4.  **Base de données persistante :** Remplacer la base de données en mémoire par une base de données sur fichier ou un serveur de base de données (comme PostgreSQL) pour une persistance réelle des données.
+### 4.2. Pistes d'Amélioration
+-   **Upload de fichiers :** Actuellement, les chemins d'images et vidéos sont saisis manuellement. L'ajout d'un système d'upload (`multer`) simplifierait la gestion.
+-   **Sécurité :** Utiliser des variables d'environnement pour le mot de passe admin et implémenter des tokens JWT pour une session plus sécurisée.
+-   **Commentaires Interactifs :** Permettre aux visiteurs de laisser des commentaires (après modération) directement sous les vidéos.
