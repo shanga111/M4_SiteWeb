@@ -3,31 +3,32 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// --- Database Initialization (In-Memory) ---
-const db = new sqlite3.Database(':memory:', (err) => {
+// --- Database Initialization (Persistent) ---
+const db = new sqlite3.Database('portfolio.db', (err) => {
   if (err) {
     console.error(err.message);
     throw err;
   }
-  console.log('Connected to the in-memory SQLite database.');
+  console.log('Connected to the persistent SQLite database (portfolio.db).');
 
   db.serialize(() => {
-    // Create "products" table
+    // Create "products" table (now used for portfolio items)
     db.run(`CREATE TABLE IF NOT EXISTS products (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
-      price REAL NOT NULL,
       image TEXT NOT NULL,
       video TEXT NOT NULL,
       modal_id TEXT NOT NULL,
-      video_preview_id TEXT NOT NULL
+      video_preview_id TEXT NOT NULL,
+      is_wide INTEGER DEFAULT 0,
+      comments TEXT DEFAULT ''
     )`);
 
-    // Create "messages" table
+    // Create "messages" table (maintained for potential future contact needs)
     db.run(`CREATE TABLE IF NOT EXISTS messages (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
@@ -36,31 +37,41 @@ const db = new sqlite3.Database(':memory:', (err) => {
       timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
 
-    // Insert initial data
+    // Insert initial data (Portfolio ERACOM)
     db.get("SELECT COUNT(*) as count FROM products", (err, row) => {
       if (err) {
         console.error("Error checking for existing products:", err.message);
         return;
       }
       if (row.count === 0) {
-        console.log("No products found, inserting default products.");
-        const productNames = [
-          'BladeRunner2049', 'BreakingBad', 'Connor', 'Dune', 'DuneV2',
-          'Joe', 'JoeV2', 'Leon', 'SpiderMan'
+        console.log("No portfolio items found, inserting default items.");
+        const items = [
+          { name: 'BladeRunnerEdit', wide: 0 },
+          { name: 'DarkEdit', wide: 0 },
+          { name: 'DarkEdit2', wide: 0 },
+          { name: 'DarthVaderEdit', wide: 0 },
+          { name: 'EllieEdit', wide: 0 },
+          { name: 'GoldenBrownEdit', wide: 0 },
+          { name: 'Gun-WooEdit', wide: 0 },
+          { name: 'LaraEdit', wide: 0 },
+          { name: 'AizenEdit', wide: 0 },
+          { name: 'LegoStopMotion(Brickfilm)', wide: 1 }
         ];
 
-        const stmt = db.prepare("INSERT INTO products (name, price, image, video, modal_id, video_preview_id) VALUES (?, ?, ?, ?, ?, ?)");
+        const stmt = db.prepare("INSERT INTO products (name, image, video, modal_id, video_preview_id, is_wide, comments) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
-        for (const name of productNames) {
+        for (const item of items) {
+          const name = item.name;
           const product = {
             name: name,
-            price: 5.00,
             image: `img/${name}.png`,
-            video: `Video/${name}.mp4`,
-            modalId: `modal-${name}`,
-            videoPreviewId: `video-preview-${name}`
+            video: `video/${name}.mp4`,
+            modalId: `modal-${name.replace(/[()]/g, '')}`,
+            videoPreviewId: `video-preview-${name.replace(/[()]/g, '')}`,
+            isWide: item.wide,
+            comments: 'Ceci est un commentaire par défaut pour ce projet ERACOM.'
           };
-          stmt.run(product.name, product.price, product.image, product.video, product.modalId, product.videoPreviewId, (err) => {
+          stmt.run(product.name, product.image, product.video, product.modalId, product.videoPreviewId, product.isWide, product.comments, (err) => {
             if (err) {
               console.error(`Error inserting ${name}:`, err.message);
             }
@@ -71,7 +82,7 @@ const db = new sqlite3.Database(':memory:', (err) => {
           if (err) {
             console.error("Error finalizing statement:", err.message);
           } else {
-            console.log("All default products have been inserted successfully.");
+            console.log("All ERACOM portfolio items have been inserted successfully.");
           }
         });
       } else {
@@ -113,44 +124,44 @@ app.post('/api/contact', (req, res) => {
 
 // --- Admin Endpoints ---
 app.post('/api/products', checkAdmin, (req, res) => {
-    const { name, price, image, video } = req.body;
-    if (!name || price === undefined || !image || !video) {
-        return res.status(400).json({ error: 'Fields name, price, image, and video are required.' });
+    const { name, image, video, is_wide, comments } = req.body;
+    if (!name || !image || !video) {
+        return res.status(400).json({ error: 'Fields name, image, and video are required.' });
     }
 
-    const modal_id = `modal-${name}`;
-    const video_preview_id = `video-preview-${name}`;
+    const modal_id = `modal-${name.replace(/[()]/g, '')}`;
+    const video_preview_id = `video-preview-${name.replace(/[()]/g, '')}`;
 
-    const sql = 'INSERT INTO products (name, price, image, video, modal_id, video_preview_id) VALUES (?, ?, ?, ?, ?, ?)';
-    db.run(sql, [name, price, image, video, modal_id, video_preview_id], function(err) {
+    const sql = 'INSERT INTO products (name, image, video, modal_id, video_preview_id, is_wide, comments) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    db.run(sql, [name, image, video, modal_id, video_preview_id, is_wide || 0, comments || ''], function(err) {
         if (err) res.status(500).json({ error: err.message });
-        else res.json({ message: 'Product added successfully!', id: this.lastID });
+        else res.json({ message: 'Projet ajouté avec succès!', id: this.lastID });
     });
 });
 
 app.put('/api/products/:id', checkAdmin, (req, res) => {
     const { id } = req.params;
-    const { name, price, image, video } = req.body;
+    const { name, image, video, is_wide, comments } = req.body;
 
-    if (!name || price === undefined || !image || !video) {
-        return res.status(400).json({ error: 'Fields name, price, image, and video are required.' });
+    if (!name || !image || !video) {
+        return res.status(400).json({ error: 'Fields name, image, and video are required.' });
     }
 
-    const modal_id = `modal-${name}`;
-    const video_preview_id = `video-preview-${name}`;
+    const modal_id = `modal-${name.replace(/[()]/g, '')}`;
+    const video_preview_id = `video-preview-${name.replace(/[()]/g, '')}`;
 
-    const sql = `UPDATE products SET name = ?, price = ?, image = ?, video = ?, modal_id = ?, video_preview_id = ? WHERE id = ?`;
+    const sql = `UPDATE products SET name = ?, image = ?, video = ?, modal_id = ?, video_preview_id = ?, is_wide = ?, comments = ? WHERE id = ?`;
 
-    db.run(sql, [name, price, image, video, modal_id, video_preview_id, id], function(err) {
+    db.run(sql, [name, image, video, modal_id, video_preview_id, is_wide || 0, comments || '', id], function(err) {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
         }
         if (this.changes === 0) {
-            res.status(404).json({ error: 'Product not found' });
+            res.status(404).json({ error: 'Projet non trouvé' });
             return;
         }
-        res.json({ message: 'Product updated successfully' });
+        res.json({ message: 'Projet mis à jour avec succès' });
     });
 });
 
