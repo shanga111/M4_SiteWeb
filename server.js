@@ -46,33 +46,32 @@ const db = new sqlite3.Database('portfolio.db', (err) => {
       if (row.count === 0) {
         console.log("No portfolio items found, inserting default items.");
         const items = [
-          { name: 'BladeRunner2049', wide: 1 },
-          { name: 'BreakingBad', wide: 0 },
-          { name: 'Connor', wide: 0 },
-          { name: 'Dune', wide: 1 },
-          { name: 'DuneV2', wide: 1 },
-          { name: 'Joe', wide: 0 },
-          { name: 'JoeV2', wide: 0 },
-          { name: 'Leon', wide: 0 },
-          { name: 'SpiderMan', wide: 0 }
+          { name: 'Blade Runner 2049', file: 'BladeRunner2049', wide: 1, comments: 'Edit réalisé sur After Effects. Travail sur l\'ambiance colorimétrique et le sound design.' },
+          { name: 'Breaking Bad', file: 'BreakingBad', wide: 0, comments: 'Montage dynamique sur After Effects explorant la tension de la série.' },
+          { name: 'Connor (Detroit Become Human)', file: 'Connor', wide: 0, comments: 'Un de mes premiers projets After Effects, focus sur les transitions.' },
+          { name: 'Dune', file: 'Dune', wide: 1, comments: 'Projet réalisé lors de ma transition vers After Effects. Utilisation intensive d\'effets visuels.' },
+          { name: 'Dune Part Two', file: 'DuneV2', wide: 1, comments: 'Travail récent sur After Effects mettant en avant la cinématographie du film.' },
+          { name: 'Joe (Blade Runner)', file: 'Joe', wide: 0, comments: 'Edit réalisé sur CapCut PC, focalisé sur le rythme et l\'émotion.' },
+          { name: 'Joe V2', file: 'JoeV2', wide: 0, comments: 'Amélioration du premier edit Joe, perfectionnement du montage sur CapCut PC.' },
+          { name: 'Léon', file: 'Leon', wide: 0, comments: 'Edit classique réalisé sur CapCut mobile à mes débuts.' },
+          { name: 'Spider-Man', file: 'SpiderMan', wide: 0, comments: 'Montage rapide et rythmé réalisé sur CapCut mobile.' }
         ];
 
         const stmt = db.prepare("INSERT INTO products (name, image, video, modal_id, video_preview_id, is_wide, comments) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
         for (const item of items) {
-          const name = item.name;
           const product = {
-            name: name,
-            image: `img/${name}.png`,
-            video: `video/${name}.mp4`,
-            modalId: `modal-${name.replace(/[() ]/g, '')}`,
-            videoPreviewId: `video-preview-${name.replace(/[() ]/g, '')}`,
+            name: item.name,
+            image: `img/${item.file}.png`,
+            video: `video/${item.file}.mp4`,
+            modalId: `modal-${item.file}`,
+            videoPreviewId: `video-preview-${item.file}`,
             isWide: item.wide,
-            comments: 'Ceci est un commentaire par défaut pour ce projet ERACOM.'
+            comments: item.comments
           };
           stmt.run(product.name, product.image, product.video, product.modalId, product.videoPreviewId, product.isWide, product.comments, (err) => {
             if (err) {
-              console.error(`Error inserting ${name}:`, err.message);
+              console.error(`Error inserting ${item.name}:`, err.message);
             }
           });
         }
@@ -97,7 +96,7 @@ const checkAdmin = (req, res, next) => {
     if (password === 'admin') {
         next();
     } else {
-        res.status(401).json({ error: 'Unauthorized' });
+        res.status(401).json({ error: 'Accès non autorisé' });
     }
 };
 
@@ -112,12 +111,12 @@ app.get('/api/products', (req, res) => {
 app.post('/api/contact', (req, res) => {
   const { name, email, message } = req.body;
   if (!name || !email || !message) {
-    return res.status(400).json({ error: 'All fields are required.' });
+    return res.status(400).json({ error: 'Tous les champs sont obligatoires.' });
   }
   const sql = 'INSERT INTO messages (name, email, message) VALUES (?, ?, ?)';
   db.run(sql, [name, email, message], function(err) {
     if (err) res.status(500).json({ error: err.message });
-    else res.json({ message: 'Message sent successfully!', id: this.lastID });
+    else res.json({ message: 'Message envoyé avec succès !', id: this.lastID });
   });
 });
 
@@ -125,11 +124,13 @@ app.post('/api/contact', (req, res) => {
 app.post('/api/products', checkAdmin, (req, res) => {
     const { name, image, video, is_wide, comments } = req.body;
     if (!name || !video) {
-        return res.status(400).json({ error: 'Fields name and video are required.' });
+        return res.status(400).json({ error: 'Les champs nom et vidéo sont obligatoires.' });
     }
 
-    const modal_id = `modal-${name.replace(/[()]/g, '')}`;
-    const video_preview_id = `video-preview-${name.replace(/[()]/g, '')}`;
+    // Slugification simplifiée pour les IDs
+    const slug = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    const modal_id = `modal-${slug}`;
+    const video_preview_id = `video-preview-${slug}`;
 
     const sql = 'INSERT INTO products (name, image, video, modal_id, video_preview_id, is_wide, comments) VALUES (?, ?, ?, ?, ?, ?, ?)';
     db.run(sql, [name, image, video, modal_id, video_preview_id, is_wide || 0, comments || ''], function(err) {
@@ -143,11 +144,12 @@ app.put('/api/products/:id', checkAdmin, (req, res) => {
     const { name, image, video, is_wide, comments } = req.body;
 
     if (!name || !video) {
-        return res.status(400).json({ error: 'Fields name and video are required.' });
+        return res.status(400).json({ error: 'Les champs nom et vidéo sont obligatoires.' });
     }
 
-    const modal_id = `modal-${name.replace(/[()]/g, '')}`;
-    const video_preview_id = `video-preview-${name.replace(/[()]/g, '')}`;
+    const slug = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    const modal_id = `modal-${slug}`;
+    const video_preview_id = `video-preview-${slug}`;
 
     const sql = `UPDATE products SET name = ?, image = ?, video = ?, modal_id = ?, video_preview_id = ?, is_wide = ?, comments = ? WHERE id = ?`;
 
@@ -169,8 +171,8 @@ app.delete('/api/products/:id', checkAdmin, (req, res) => {
     const sql = 'DELETE FROM products WHERE id = ?';
     db.run(sql, id, function(err) {
         if (err) res.status(500).json({ error: err.message });
-        else if (this.changes === 0) res.status(404).json({ error: 'Product not found' });
-        else res.json({ message: 'Product deleted successfully!' });
+        else if (this.changes === 0) res.status(404).json({ error: 'Projet non trouvé' });
+        else res.json({ message: 'Projet supprimé avec succès !' });
     });
 });
 

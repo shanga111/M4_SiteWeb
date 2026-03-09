@@ -19,6 +19,12 @@ Le cahier des charges du module imposait de remplir les objectifs suivants :
 -   **Développement d'une application fonctionnelle :** Créer une application web dynamique incluant une API RESTful et une interface de gestion.
 -   **Rédaction d'un mémento technique :** Produire une documentation exhaustive détaillant tous les aspects techniques.
 
+### 1.2. Contexte du Portfolio
+Ce portfolio sert de dossier d'inscription pour l'**ERACOM**. Il présente un parcours d'auto-apprentissage de plus de 2 ans dans le domaine des "TikTok Edits" :
+-   **Mai 2023 - Juillet 2024 :** Débuts sur CapCut mobile.
+-   **Juillet 2024 - Août 2024 :** Transition sur CapCut PC pour plus de précision.
+-   **Depuis Août 2024 :** Spécialisation sur After Effects pour des montages avancés.
+
 ### 1.2. Justification des Technologies Choisies
 
 -   **Node.js & Express.js :**
@@ -60,7 +66,7 @@ Le fichier `server.js` est le contrôleur central de l'application.
 
 1.  **Serveur Express :** Configure les middlewares et sert les fichiers statiques.
 2.  **Base de Données SQLite :** Établit la connexion au fichier `portfolio.db`.
-3.  **Initialisation et Seeding :** Au premier lancement (si la table est vide), il peuple la base avec 10 projets par défaut (dont un projet Lego au format 16:9).
+3.  **Initialisation et Seeding :** Au premier lancement (si la table est vide), il peuple la base avec 9 projets par défaut, incluant des chemins vers les dossiers `video/` et `img/` (pour les posters).
 4.  **API RESTful :**
     -   `GET /api/products`: Récupère la liste des projets.
     -   `POST /api/contact`: Enregistre les messages de contact.
@@ -70,10 +76,10 @@ Le fichier `server.js` est le contrôleur central de l'application.
 
 ### 2.3. Architecture Frontend et Fonctionnalités
 
-1.  **Grille Responsive Dynamique :** Utilisation de `vw` (viewport width) pour garantir des vignettes carrées (1:1) sur tous les écrans, avec une adaptation du nombre de colonnes (3 sur PC, 2 sur Tablette, 1 sur Mobile). Le site n'utilise pas d'images statiques de couverture (posters), s'appuyant directement sur la première frame de la vidéo.
+1.  **Grille Responsive Dynamique :** Utilisation de `vw` (viewport width) pour garantir des vignettes carrées (1:1) sur tous les écrans. Le site utilise des images statiques de couverture (**posters**) situées dans le dossier `img/` pour un affichage instantané avant la lecture vidéo.
 2.  **Interactions Audio-Visuelles :**
     -   **Son au survol :** Sur Desktop, le survol d'une vignette active la vidéo avec le son (`muted = false`).
-    -   **Autoplay Mobile Intelligent :** Utilisation de l'API `IntersectionObserver` avec un masque central (`rootMargin`) pour ne lancer que la vidéo située au milieu de l'écran sur mobile.
+    -   **Autoplay Mobile avec Poster :** Utilisation de l'API `IntersectionObserver`. Lorsqu'une vidéo quitte le centre de l'écran sur mobile, elle est mise en pause et réinitialisée (`load()`) pour afficher à nouveau son image poster, évitant ainsi un écran noir ou figé.
     -   **Modales de Projet :** Affichent la vidéo en grand avec une section de commentaires/notes techniques extraite de la base de données.
 3.  **Interface d'Administration :** Permet de gérer les projets, de définir si un projet doit s'afficher en format large (16:9) et d'éditer les commentaires techniques.
 

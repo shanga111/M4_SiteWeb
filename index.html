@@ -35,8 +35,8 @@
     <div class="video-content">
         <div class="inner">
             <h1>Bienvenue sur mon <em>Portfolio</em></h1>
-            <p>Découvrez mes <strong>Projets Vidéo</strong> réalisés pour mon dossier d'inscription à l'<strong>ERACOM</strong>.</p>
-            <p>Explorez mes créations ci-dessous.</p>
+                <p>Candidat pour l'<strong>ERACOM</strong>, je présente ici mes <strong>TikTok Edits</strong> réalisés au fil de mon auto-apprentissage.</p>
+                <p>D'abord sur CapCut mobile, puis PC, et maintenant sur <strong>After Effects</strong>.</p>
             <div class="scroll-icon">
                 <a class="scrollTo" data-scrollTo="portfolio" href="#"><img src="img/scroll-icon.png" alt="Icone de défilement"></a>
             </div>
@@ -160,7 +160,7 @@
                                         </div>
                                     </div>
                                     <div class="image">
-                                        <video id="${product.video_preview_id}" loop muted preload="metadata">
+                                        <video id="${product.video_preview_id}" loop muted preload="metadata" poster="${product.image}">
                                             <source src="${product.video}" type="video/mp4">
                                         </video>
                                     </div>
@@ -222,10 +222,6 @@
             }
         }
 
-        // Function to open the main contact modal
-        window.openContactModal = function() {
-            document.getElementById('modal').style.display = 'block';
-        }
 
         // Function that attaches all necessary listeners
         function initializeEventListeners() {
@@ -285,21 +281,21 @@
         // Intersection Observer for mobile autoplay
         function setupIntersectionObserver() {
             if (window.innerWidth <= 767) {
-                // Focus on the center of the screen
                 const options = {
                     root: null,
-                    rootMargin: '-45% 0px -45% 0px', // Creates a narrow horizontal strip in the middle
-                    threshold: 0
+                    rootMargin: '-30% 0px -30% 0px', // Elargi un peu pour mobile
+                    threshold: 0.5 // La vidéo doit être visible à 50%
                 };
 
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         const video = entry.target;
                         if (entry.isIntersecting) {
-                            video.currentTime = 0;
                             video.play().catch(() => {});
                         } else {
                             video.pause();
+                            video.currentTime = 0; // Retour à l'image poster
+                            video.load(); // Force le rechargement pour afficher le poster
                         }
                     });
                 }, options);

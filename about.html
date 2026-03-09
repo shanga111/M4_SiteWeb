@@ -129,10 +129,11 @@
     <div class="container">
         <div class="col-md-5 col-md-offset-7">
             <div class="content">
-                <h2>Ma Mission : Créer l'Impact Visuel</h2>
-                <span>Futur étudiant ERACOM, Créateur Passionné</span>
-                <p>Je suis un monteur vidéo et créateur d'effets visuels passionné, candidat à la formation de l'ERACOM. Mon travail se concentre sur l'impact visuel et la synchronisation sonore.
-                    <br><br>Ce portfolio est le reflet de mon évolution technique et créative. Chaque projet présenté est le résultat d'une recherche approfondie pour allier esthétique moderne et maîtrise technique.</p>
+                <h2>Mon Parcours : De CapCut à After Effects</h2>
+                <span>Candidat ERACOM, Autodidacte Passionné</span>
+                <p>Mon aventure dans le montage vidéo a commencé il y a plus de deux ans. Passionné par l'univers des "TikTok Edits", j'ai d'abord appris en autodidacte grâce à YouTube et à l'aide de connaissances rencontrées en ligne.
+                    <br><br>J'ai débuté sur <strong>CapCut mobile</strong> (mai 2023 - juillet 2024), avant de passer sur <strong>CapCut PC</strong> (juillet 2024 - août 2024) pour plus de précision. Depuis août 2024, je me consacre exclusivement à <strong>After Effects</strong>, ce qui m'a permis de franchir un cap technique majeur.
+                    <br><br>Ce portfolio témoigne de cette progression constante et de ma détermination à intégrer l'ERACOM pour professionnaliser ma passion.</p>
                 <div class="simple-btn">
                     <a href="index.html#portfolio">Voir mes projets</a>
                 </div>
@@ -225,32 +226,9 @@
         modalElement.style.display = 'none';
     }
 
-    // Function to open the main contact modal (id="modal")
-    function openContactModal() {
-        closeModal(document.getElementById('unavailable-modal'));
-        document.getElementById('modal').style.display = 'block';
-    }
-
-    // Function to open the Unavailable modal
-    function openUnavailableModal(productName) {
-        const unavailableModal = document.getElementById('unavailable-modal');
-        if (!unavailableModal) return;
-
-        // Update the product name in the modal
-        const productNameSpan = document.getElementById('unavailableProductName');
-        if (productNameSpan) {
-            productNameSpan.textContent = productName;
-        }
-
-        unavailableModal.style.display = 'block';
-    }
-
-
     document.addEventListener('DOMContentLoaded', function() {
         const mainContactModal = document.getElementById('modal');
-        const unavailableModal = document.getElementById('unavailable-modal');
         const closeMainContactBtn = mainContactModal ? mainContactModal.querySelector('.close-btn') : null;
-        const closeUnavailableBtn = document.getElementById('closeUnavailableModal');
         const modBtn = document.getElementById('modBtn');
 
         // Open modal via ModBtn (floating button)
@@ -267,22 +245,55 @@
             }
         }
 
-        // Close Unavailable Modal
-        if (closeUnavailableBtn) {
-            closeUnavailableBtn.onclick = function() {
-                closeModal(unavailableModal);
-            }
-        }
-
         // Close modals when clicking outside
         window.onclick = function(event) {
             if (event.target === mainContactModal) {
                 closeModal(mainContactModal);
             }
-            if (event.target === unavailableModal) {
-                closeModal(unavailableModal);
-            }
         };
+
+        // --- CONTACT FORM HANDLING ---
+        const contactForm = document.getElementById('contact');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const message = document.getElementById('message').value;
+                const submitButton = document.getElementById('form-submit');
+                const originalButtonText = submitButton.textContent;
+
+                submitButton.textContent = 'Envoi...';
+                submitButton.disabled = true;
+
+                fetch('/api/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, email, message }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.id) {
+                        alert('Message envoyé avec succès !');
+                        contactForm.reset();
+                        closeModal(mainContactModal);
+                    } else {
+                        alert('Erreur: ' + data.error);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Une erreur est survenue.');
+                })
+                .finally(() => {
+                    submitButton.textContent = originalButtonText;
+                    submitButton.disabled = false;
+                });
+            });
+        }
     });
 </script>
 
