@@ -35,8 +35,8 @@
     <div class="video-content">
         <div class="inner">
             <h1>Bienvenue sur mon <em>Portfolio</em></h1>
-            <p>Découvrez mes <strong>Projets Vidéo</strong> réalisés pour mon dossier d'inscription à l'<strong>ERACOM</strong>.</p>
-            <p>Explorez mes créations ci-dessous.</p>
+                <p>Passionné de montage vidéo, je présente ici mes créations pour mon dossier d'inscription à l'<strong>ERACOM</strong>.</p>
+                <p>Découvrez mon univers de montage à travers ces "Edits TikTok" et autres projets.</p>
             <div class="scroll-icon">
                 <a class="scrollTo" data-scrollTo="portfolio" href="#"><img src="img/scroll-icon.png" alt="Icone de défilement"></a>
             </div>
@@ -288,7 +288,7 @@
                 // Focus on the center of the screen
                 const options = {
                     root: null,
-                    rootMargin: '-45% 0px -45% 0px', // Creates a narrow horizontal strip in the middle
+                    rootMargin: '-40% 0px -40% 0px', // Tighter center focus
                     threshold: 0
                 };
 
@@ -296,10 +296,17 @@
                     entries.forEach(entry => {
                         const video = entry.target;
                         if (entry.isIntersecting) {
+                            video.muted = false; // Attempt to play with sound
                             video.currentTime = 0;
-                            video.play().catch(() => {});
+                            video.play().catch(error => {
+                                // If blocked (likely due to sound), play muted
+                                video.muted = true;
+                                video.play().catch(e => console.warn("Autoplay failed:", e));
+                            });
                         } else {
                             video.pause();
+                            video.currentTime = 0; // Return to first frame
+                            video.muted = true;
                         }
                     });
                 }, options);
