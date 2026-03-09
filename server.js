@@ -46,15 +46,16 @@ const db = new sqlite3.Database('portfolio.db', (err) => {
       if (row.count === 0) {
         console.log("No portfolio items found, inserting default items.");
         const items = [
-          { name: 'BladeRunner2049', wide: 1 },
-          { name: 'BreakingBad', wide: 0 },
-          { name: 'Connor', wide: 0 },
-          { name: 'Dune', wide: 1 },
-          { name: 'DuneV2', wide: 1 },
-          { name: 'Joe', wide: 0 },
-          { name: 'JoeV2', wide: 0 },
-          { name: 'Leon', wide: 0 },
-          { name: 'SpiderMan', wide: 0 }
+          { name: 'BladeRunnerEdit', wide: 0 },
+          { name: 'DarkEdit', wide: 0 },
+          { name: 'DarkEdit2', wide: 0 },
+          { name: 'DarthVaderEdit', wide: 0 },
+          { name: 'EllieEdit', wide: 0 },
+          { name: 'GoldenBrownEdit', wide: 0 },
+          { name: 'Gun-WooEdit', wide: 0 },
+          { name: 'LaraEdit', wide: 0 },
+          { name: 'AizenEdit', wide: 0 },
+          { name: 'LegoStopMotion(Brickfilm)', wide: 1 }
         ];
 
         const stmt = db.prepare("INSERT INTO products (name, image, video, modal_id, video_preview_id, is_wide, comments) VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -65,8 +66,8 @@ const db = new sqlite3.Database('portfolio.db', (err) => {
             name: name,
             image: `img/${name}.png`,
             video: `video/${name}.mp4`,
-            modalId: `modal-${name.replace(/[() ]/g, '')}`,
-            videoPreviewId: `video-preview-${name.replace(/[() ]/g, '')}`,
+            modalId: `modal-${name.replace(/[()]/g, '')}`,
+            videoPreviewId: `video-preview-${name.replace(/[()]/g, '')}`,
             isWide: item.wide,
             comments: 'Ceci est un commentaire par défaut pour ce projet ERACOM.'
           };
@@ -124,8 +125,8 @@ app.post('/api/contact', (req, res) => {
 // --- Admin Endpoints ---
 app.post('/api/products', checkAdmin, (req, res) => {
     const { name, image, video, is_wide, comments } = req.body;
-    if (!name || !video) {
-        return res.status(400).json({ error: 'Fields name and video are required.' });
+    if (!name || !image || !video) {
+        return res.status(400).json({ error: 'Fields name, image, and video are required.' });
     }
 
     const modal_id = `modal-${name.replace(/[()]/g, '')}`;
@@ -142,8 +143,8 @@ app.put('/api/products/:id', checkAdmin, (req, res) => {
     const { id } = req.params;
     const { name, image, video, is_wide, comments } = req.body;
 
-    if (!name || !video) {
-        return res.status(400).json({ error: 'Fields name and video are required.' });
+    if (!name || !image || !video) {
+        return res.status(400).json({ error: 'Fields name, image, and video are required.' });
     }
 
     const modal_id = `modal-${name.replace(/[()]/g, '')}`;
