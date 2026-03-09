@@ -10,7 +10,7 @@
 
 Ce document constitue le mémento technique détaillé du projet de portfolio dynamique, réalisé dans le cadre du module "Technologie du WEB". L'objectif central était de faire évoluer un site portfolio statique en une application web complète et dynamique, en s'appuyant sur des technologies côté serveur pour la gestion de contenu, la persistance des données et les interactions.
 
-Le projet final est un **Portfolio ERACOM** présentant des projets vidéo. Il dispose d'une interface d'administration sécurisée permettant une gestion complète des projets (Ajout, Modification, Suppression) et de fonctionnalités interactives avancées (son au survol, lecture automatique mobile).
+Le projet final est un **Portfolio de candidature ERACOM** présentant des projets vidéo. Il dispose d'une interface d'administration sécurisée permettant une gestion complète des projets (Ajout, Modification, Suppression) et de fonctionnalités interactives avancées (son au survol, lecture automatique mobile).
 
 ### 1.1. Objectifs Pédagogiques et Techniques
 Le cahier des charges du module imposait de remplir les objectifs suivants :
@@ -41,7 +41,7 @@ L'application repose sur une séparation claire entre la logique de présentatio
 ```
 /
 |-- css/                  # Styles (Bootstrap, template custom, responsive grid)
-|-- img/                  # Images de poster pour les vidéos
+|-- img/                  # Images (facultatif)
 |-- js/                   # Scripts JS client
 |-- video/                # Vidéos des projets (dossier standardisé)
 |
@@ -70,10 +70,10 @@ Le fichier `server.js` est le contrôleur central de l'application.
 
 ### 2.3. Architecture Frontend et Fonctionnalités
 
-1.  **Grille Responsive Dynamique :** Utilisation de `vw` (viewport width) pour garantir des vignettes carrées (1:1) sur tous les écrans, avec une adaptation du nombre de colonnes (3 sur PC, 2 sur Tablette, 1 sur Mobile).
+1.  **Grille Responsive Dynamique :** Utilisation de `vw` (viewport width) pour garantir des vignettes carrées (1:1) sur tous les écrans, avec une adaptation du nombre de colonnes (3 sur PC, 2 sur Tablette, 1 sur Mobile). Le site n'utilise pas d'images statiques de couverture (posters), s'appuyant directement sur la première frame de la vidéo.
 2.  **Interactions Audio-Visuelles :**
     -   **Son au survol :** Sur Desktop, le survol d'une vignette active la vidéo avec le son (`muted = false`).
-    -   **Autoplay Mobile :** Utilisation de l'API `IntersectionObserver` pour lancer automatiquement la lecture de la vidéo la plus visible à l'écran sur mobile.
+    -   **Autoplay Mobile Intelligent :** Utilisation de l'API `IntersectionObserver` avec un masque central (`rootMargin`) pour ne lancer que la vidéo située au milieu de l'écran sur mobile.
     -   **Modales de Projet :** Affichent la vidéo en grand avec une section de commentaires/notes techniques extraite de la base de données.
 3.  **Interface d'Administration :** Permet de gérer les projets, de définir si un projet doit s'afficher en format large (16:9) et d'éditer les commentaires techniques.
 
