@@ -68,7 +68,7 @@ const db = new sqlite3.Database('portfolio.db', (err) => {
             modalId: `modal-${name.replace(/[() ]/g, '')}`,
             videoPreviewId: `video-preview-${name.replace(/[() ]/g, '')}`,
             isWide: item.wide,
-            comments: 'Ceci est un commentaire par défaut pour ce projet ERACOM.'
+            comments: 'Edit TikTok réalisé en autodidacte (After Effects / CapCut).'
           };
           stmt.run(product.name, product.image, product.video, product.modalId, product.videoPreviewId, product.isWide, product.comments, (err) => {
             if (err) {
