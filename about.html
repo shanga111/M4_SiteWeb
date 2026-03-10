@@ -151,47 +151,6 @@
 </footer>
 
 
-<div class="popup-icon">
-    <button id="modBtn" class="modal-btn"><img src="img/contact-icon.png" alt="Icone Contact"></button>
-</div>
-
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="header-title">Me contacter <em>ERACOM</em></h3>
-            <div class="close-btn"><img src="img/close_contact.png" alt="Fermer la modale"></div>
-        </div>
-        <div class="modal-body">
-            <div class="col-md-6 col-md-offset-3">
-                <form id="contact" action="" method="post">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <fieldset>
-                                <input name="name" type="text" class="form-control" id="name" placeholder="Votre nom..." required="">
-                            </fieldset>
-                        </div>
-                        <div class="col-md-12">
-                            <fieldset>
-                                <input name="email" type="email" class="form-control" id="email" placeholder="Votre email..." required="">
-                            </fieldset>
-                        </div>
-                        <div class="col-md-12">
-                            <fieldset>
-                                <textarea name="message" rows="6" class="form-control" id="message" placeholder="Votre message ou question..." required=""></textarea>
-                            </fieldset>
-                        </div>
-                        <div class="col-md-12">
-                            <fieldset>
-                                <button type="submit" id="form-submit" class="btn">Envoyer le message</button>
-                            </fieldset>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <section class="overlay-menu">
     <div class="container">
         <div class="row">
@@ -217,74 +176,6 @@
 
 <script src="js/plugins.js"></script>
 <script src="js/main.js"></script>
-
-<script>
-    // Helper function to close any modal
-    function closeModal(modalElement) {
-        if (!modalElement) return;
-        modalElement.style.display = 'none';
-    }
-
-    // Function to open the main contact modal (id="modal")
-    function openContactModal() {
-        closeModal(document.getElementById('unavailable-modal'));
-        document.getElementById('modal').style.display = 'block';
-    }
-
-    // Function to open the Unavailable modal
-    function openUnavailableModal(productName) {
-        const unavailableModal = document.getElementById('unavailable-modal');
-        if (!unavailableModal) return;
-
-        // Update the product name in the modal
-        const productNameSpan = document.getElementById('unavailableProductName');
-        if (productNameSpan) {
-            productNameSpan.textContent = productName;
-        }
-
-        unavailableModal.style.display = 'block';
-    }
-
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const mainContactModal = document.getElementById('modal');
-        const unavailableModal = document.getElementById('unavailable-modal');
-        const closeMainContactBtn = mainContactModal ? mainContactModal.querySelector('.close-btn') : null;
-        const closeUnavailableBtn = document.getElementById('closeUnavailableModal');
-        const modBtn = document.getElementById('modBtn');
-
-        // Open modal via ModBtn (floating button)
-        if (modBtn && mainContactModal) {
-            modBtn.onclick = function() {
-                mainContactModal.style.display = 'block';
-            }
-        }
-
-        // Close Main Contact Modal
-        if (closeMainContactBtn) {
-            closeMainContactBtn.onclick = function() {
-                closeModal(mainContactModal);
-            }
-        }
-
-        // Close Unavailable Modal
-        if (closeUnavailableBtn) {
-            closeUnavailableBtn.onclick = function() {
-                closeModal(unavailableModal);
-            }
-        }
-
-        // Close modals when clicking outside
-        window.onclick = function(event) {
-            if (event.target === mainContactModal) {
-                closeModal(mainContactModal);
-            }
-            if (event.target === unavailableModal) {
-                closeModal(unavailableModal);
-            }
-        };
-    });
-</script>
 
 </body>
 </html>
