@@ -233,12 +233,24 @@
             const gridVideos = document.querySelectorAll('.grid-video');
             const isMobile = window.innerWidth <= 767;
 
+            // Unlock audio on first interaction
+            const unlockAudio = () => {
+                gridVideos.forEach(v => {
+                    v.muted = true; // Still start muted to be safe
+                });
+                window.removeEventListener('click', unlockAudio);
+                window.removeEventListener('touchstart', unlockAudio);
+                console.log("Audio context potentially unlocked");
+            };
+            window.addEventListener('click', unlockAudio);
+            window.addEventListener('touchstart', unlockAudio);
+
             if (isMobile) {
                 // Mobile: Autoplay on Scroll (Intersection Observer)
-                // Assure qu'une seule vidéo est lancée à la fois (celle au centre) avec le SON activé
+                // Assure qu'une SEULE vidéo est lancée à la fois (celle au centre) avec le SON activé
                 const options = {
                     root: null,
-                    rootMargin: '-40% 0px -40% 0px', // Détection précise du centre
+                    rootMargin: '-45% 0px -45% 0px', // Zone de détection très étroite au centre (10% de l'écran)
                     threshold: 0
                 };
 
@@ -246,16 +258,25 @@
                     entries.forEach(entry => {
                         const video = entry.target;
                         if (entry.isIntersecting) {
-                            video.muted = false; // Activation du son
+                            // On force l'arrêt de TOUTES les autres vidéos pour garantir la lecture unique
+                            gridVideos.forEach(v => {
+                                if (v !== video) {
+                                    v.pause();
+                                    v.muted = true;
+                                    // On ne fait pas load() ici pour éviter les flashs, sauf si nécessaire
+                                }
+                            });
+
+                            video.muted = false;
                             video.play().catch(e => {
-                                console.log("Autoplay avec son bloqué, tentative en muet", e);
+                                // Si l'audio est toujours bloqué, on joue en muet (requis par les navigateurs)
                                 video.muted = true;
                                 video.play();
                             });
                         } else {
                             video.pause();
                             video.muted = true;
-                            video.load(); // Force le retour au poster PNG
+                            video.load(); // Retour au poster PNG
                         }
                     });
                 }, options);
@@ -266,9 +287,16 @@
                 gridVideos.forEach(video => {
                     const portfolioItem = video.closest('.portfolio-item');
                     portfolioItem.addEventListener('mouseenter', () => {
-                        video.muted = false; // Activation du son
+                        // Arrêter les autres au cas où (optionnel sur desktop mais plus sûr)
+                        gridVideos.forEach(v => {
+                            if (v !== video) {
+                                v.pause();
+                                v.muted = true;
+                            }
+                        });
+
+                        video.muted = false;
                         video.play().catch(e => {
-                            console.log("Lecture au survol avec son bloquée, tentative en muet", e);
                             video.muted = true;
                             video.play();
                         });
@@ -276,7 +304,7 @@
                     portfolioItem.addEventListener('mouseleave', () => {
                         video.pause();
                         video.muted = true;
-                        video.load(); // Force le retour au poster PNG
+                        video.load(); // Retour au poster PNG
                     });
                 });
             }
