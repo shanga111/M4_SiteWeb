@@ -128,7 +128,7 @@
                                         </div>
                                     </div>
                                     <div class="image">
-                                        <video id="video-preview-${product.video_preview_id}" width="100%" muted loop playsinline poster="${posterPath}" class="grid-video">
+                                        <video id="video-preview-${product.video_preview_id}" width="100%" muted loop playsinline poster="${posterPath}" class="grid-video" preload="metadata">
                                             <source src="${product.video}" type="video/mp4">
                                         </video>
                                     </div>
@@ -249,7 +249,7 @@
                             video.play().catch(e => console.log("Autoplay blocked", e));
                         } else {
                             video.pause();
-                            video.currentTime = 0;
+                            video.load(); // Force le retour au poster PNG
                         }
                     });
                 }, options);
@@ -264,7 +264,7 @@
                     });
                     portfolioItem.addEventListener('mouseleave', () => {
                         video.pause();
-                        video.currentTime = 0;
+                        video.load(); // Force le retour au poster PNG
                     });
                 });
             }
