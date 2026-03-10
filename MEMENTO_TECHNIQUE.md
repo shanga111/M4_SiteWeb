@@ -70,10 +70,14 @@ Le fichier `server.js` est le contrôleur central de l'application.
 
 ### 2.3. Architecture Frontend et Fonctionnalités
 
-1.  **Grille Responsive Dynamique :** Utilisation de `vw` (viewport width) pour garantir des vignettes carrées (1:1) sur tous les écrans, avec une adaptation du nombre de colonnes (3 sur PC, 2 sur Tablette, 1 sur Mobile). La grille utilise des images statiques (thumbnails) pour représenter les projets, assurant une performance optimale et une compatibilité maximale sur tous les appareils.
-2.  **Interactions Audio-Visuelles :**
-    -   **Modales de Projet :** Le clic sur un projet ouvre une fenêtre modale affichant la vidéo en grand avec le son, ainsi qu'une section de commentaires/notes techniques extraite de la base de données.
-3.  **Interface d'Administration :** Permet de gérer les projets, de définir si un projet doit s'afficher en format large (16:9) et d'éditer les commentaires techniques.
+1.  **Grille Responsive Dynamique :** Utilisation de `vw` (viewport width) pour garantir des vignettes carrées (1:1) sur tous les écrans, avec une adaptation du nombre de colonnes (3 sur PC, 2 sur Tablette, 1 sur Mobile). La grille gère intelligemment les formats mixtes (1:1 et 16:9).
+2.  **Interactions Audio-Visuelles et Previews :**
+    -   **Previews Vidéo :** La grille affiche des extraits vidéo (`<video>`) avec des posters optimisés.
+    -   **Desktop :** Lecture automatique au survol de la souris (Play on Hover) et pause au retrait.
+    -   **Mobile :** Système de lecture intelligente via `IntersectionObserver`. Seule la vidéo située au centre de l'écran se lance automatiquement, les autres sont mises en pause pour économiser les ressources et garantir une expérience fluide.
+    -   **Modales de Projet :** Le clic sur un projet ouvre une fenêtre modale affichant la vidéo avec le son activé, ainsi qu'une section de commentaires/notes techniques extraite de la base de données.
+3.  **Intégration Réseaux Sociaux :** Un bouton flottant permanent permet d'accéder directement au profil TikTok du créateur (`@0banax`).
+4.  **Interface d'Administration :** Permet de gérer les projets, de définir si un projet doit s'afficher en format large (16:9) et d'éditer les commentaires techniques.
 
 ---
 
