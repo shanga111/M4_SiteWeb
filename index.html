@@ -192,18 +192,39 @@
 
         // Function that attaches all necessary listeners
         function initializeEventListeners() {
-            // Click to open a product modal
+            const isMobile = window.innerWidth <= 767;
+
+            // Click to open a product modal OR STOP video on mobile
             document.querySelectorAll('.openProductModal').forEach(button => {
                 button.onclick = function(e) {
                     e.preventDefault();
+
+                    const videoPreview = button.querySelector('video');
+
+                    // ON MOBILE: If video is playing (not paused), tap stops it first
+                    if (isMobile && videoPreview && !videoPreview.paused) {
+                        videoPreview.pause();
+                        videoPreview.muted = true;
+                        videoPreview.load(); // Back to poster
+                        videoPreview.dataset.manualStop = "true"; // Flag to prevent immediate restart by IntersectionObserver
+                        return; // Prevent opening modal on first tap that stops video
+                    }
+
                     const modalId = button.getAttribute('data-modal');
                     const modal = document.getElementById(modalId);
 
                     if (modal) {
+                        // Stop all grid previews when opening a modal
+                        document.querySelectorAll('.grid-video').forEach(v => {
+                            v.pause();
+                            v.muted = true;
+                            v.load();
+                        });
+
                         modal.style.display = 'block';
                         const modalVideo = modal.querySelector('video');
                         if (modalVideo) {
-                            modalVideo.muted = false; // Son activé par défaut à la lecture
+                            modalVideo.muted = false;
                             modalVideo.currentTime = 0;
                             modalVideo.play();
                         }
@@ -258,22 +279,30 @@
                     entries.forEach(entry => {
                         const video = entry.target;
                         if (entry.isIntersecting) {
+                            // Reset manual stop flag when entering focus
+                            // (Permet de relancer l'autoplay si l'utilisateur scroll et revient sur la vidéo après un arrêt manuel)
+                            // Note: Si on veut qu'elle reste arrêtée tant qu'elle est au centre, on gère différemment.
+
+                            // Si l'utilisateur a arrêté manuellement cette vidéo, on ne la relance pas immédiatement
+                            if (video.dataset.manualStop === "true") return;
+
                             // On force l'arrêt de TOUTES les autres vidéos pour garantir la lecture unique
                             gridVideos.forEach(v => {
                                 if (v !== video) {
                                     v.pause();
                                     v.muted = true;
-                                    // On ne fait pas load() ici pour éviter les flashs, sauf si nécessaire
+                                    v.load(); // Full reset for others to be clean
                                 }
                             });
 
                             video.muted = false;
                             video.play().catch(e => {
-                                // Si l'audio est toujours bloqué, on joue en muet (requis par les navigateurs)
                                 video.muted = true;
                                 video.play();
                             });
                         } else {
+                            // Reset state when leaving focus
+                            video.dataset.manualStop = "false";
                             video.pause();
                             video.muted = true;
                             video.load(); // Retour au poster PNG
