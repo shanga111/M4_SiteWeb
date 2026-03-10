@@ -120,7 +120,7 @@
                     portfolioHtml += `
                         <div class="col-md-4 col-sm-6 ${product.is_wide ? 'wide-item' : ''}">
                             <div class="portfolio-item">
-                                <a href="#${product.modal_id}" class="openProductModal" data-modal="${product.modal_id}" data-video="${product.video_preview_id}"><div class="thumb">
+                                <a href="#${product.modal_id}" class="openProductModal" data-modal="${product.modal_id}"><div class="thumb">
                                     <div class="hover-effect">
                                         <div class="hover-content">
                                             <h1><strong>${product.name}</strong></h1>
@@ -128,9 +128,7 @@
                                         </div>
                                     </div>
                                     <div class="image">
-                                        <video id="${product.video_preview_id}" loop muted preload="metadata" poster="${posterPath}">
-                                            <source src="${product.video}" type="video/mp4">
-                                        </video>
+                                        <img src="${posterPath}" alt="${product.name}">
                                     </div>
                                 </div></a>
                             </div>
@@ -171,7 +169,6 @@
 
                 // --- 2. RE-INITIALIZING EVENT LISTENERS ---
                 initializeEventListeners();
-                setupIntersectionObserver();
             })
             .catch(error => {
                 console.error('Error fetching products:', error);
@@ -192,46 +189,12 @@
 
         // Function that attaches all necessary listeners
         function initializeEventListeners() {
-            // Hover over portfolio videos
-            document.querySelectorAll('.portfolio-item').forEach(item => {
-                const link = item.querySelector('a.openProductModal');
-                if (link) {
-                    const videoId = link.getAttribute('data-video');
-                    const videoElement = document.getElementById(videoId);
-
-                    if (videoElement) {
-                        item.addEventListener('mouseenter', () => {
-                            if (window.innerWidth > 767) {
-                                videoElement.muted = false; // Sound on hover
-                                videoElement.load();
-                                videoElement.play().catch(error => console.warn("Autoplay was blocked."));
-                            }
-                        });
-
-                        item.addEventListener('mouseleave', () => {
-                            videoElement.muted = true;
-                            videoElement.pause();
-                            videoElement.currentTime = 0;
-                            videoElement.load();
-                        });
-                    }
-                }
-            });
-
             // Click to open a product modal
             document.querySelectorAll('.openProductModal').forEach(button => {
                 button.onclick = function(e) {
                     e.preventDefault();
                     const modalId = button.getAttribute('data-modal');
                     const modal = document.getElementById(modalId);
-                    const videoId = button.getAttribute('data-video');
-                    const previewVideo = document.getElementById(videoId);
-
-                    // Pause preview video before opening modal
-                    if (previewVideo) {
-                        previewVideo.pause();
-                        previewVideo.muted = true;
-                    }
 
                     if (modal) {
                         modal.style.display = 'block';
@@ -251,48 +214,6 @@
                     closeModal(button.closest('.modal'));
                 }
             });
-        }
-
-        // Intersection Observer for mobile autoplay
-        function setupIntersectionObserver() {
-            if (window.innerWidth <= 767) {
-                // Focus on the center of the screen
-                const options = {
-                    root: null,
-                    rootMargin: '-40% 0px -40% 0px', // Tighter center focus
-                    threshold: 0
-                };
-
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        const video = entry.target;
-                        if (entry.isIntersecting) {
-                            // Pause all other videos before playing the current one
-                            document.querySelectorAll('.portfolio-item video').forEach(v => {
-                                if (v !== video) {
-                                    v.pause();
-                                    v.currentTime = 0;
-                                    v.muted = true;
-                                }
-                            });
-
-                            video.muted = false; // Attempt to play with sound
-                            video.currentTime = 0;
-                            video.play().catch(error => {
-                                // If blocked (likely due to sound), play muted
-                                video.muted = true;
-                                video.play().catch(e => console.warn("Autoplay failed:", e));
-                            });
-                        } else {
-                            video.pause();
-                            video.currentTime = 0; // Return to first frame
-                            video.muted = true;
-                        }
-                    });
-                }, options);
-
-                document.querySelectorAll('.portfolio-item video').forEach(v => observer.observe(v));
-            }
         }
 
         // --- 3. HANDLING MODALS ---

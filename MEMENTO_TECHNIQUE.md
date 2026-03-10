@@ -70,11 +70,9 @@ Le fichier `server.js` est le contrôleur central de l'application.
 
 ### 2.3. Architecture Frontend et Fonctionnalités
 
-1.  **Grille Responsive Dynamique :** Utilisation de `vw` (viewport width) pour garantir des vignettes carrées (1:1) sur tous les écrans, avec une adaptation du nombre de colonnes (3 sur PC, 2 sur Tablette, 1 sur Mobile). Le site utilise des images statiques de couverture (`poster`) pour améliorer le temps de chargement initial.
+1.  **Grille Responsive Dynamique :** Utilisation de `vw` (viewport width) pour garantir des vignettes carrées (1:1) sur tous les écrans, avec une adaptation du nombre de colonnes (3 sur PC, 2 sur Tablette, 1 sur Mobile). La grille utilise des images statiques (thumbnails) pour représenter les projets, assurant une performance optimale et une compatibilité maximale sur tous les appareils.
 2.  **Interactions Audio-Visuelles :**
-    -   **Son au survol :** Sur Desktop, le survol d'une vignette active la vidéo avec le son (`muted = false`).
-    -   **Autoplay Mobile Intelligent :** Utilisation de l'API `IntersectionObserver` avec un masque central (`rootMargin`) pour ne lancer que la vidéo située au milieu de l'écran sur mobile.
-    -   **Modales de Projet :** Affichent la vidéo en grand avec une section de commentaires/notes techniques extraite de la base de données.
+    -   **Modales de Projet :** Le clic sur un projet ouvre une fenêtre modale affichant la vidéo en grand avec le son, ainsi qu'une section de commentaires/notes techniques extraite de la base de données.
 3.  **Interface d'Administration :** Permet de gérer les projets, de définir si un projet doit s'afficher en format large (16:9) et d'éditer les commentaires techniques.
 
 ---
@@ -98,7 +96,7 @@ Le fichier `server.js` est le contrôleur central de l'application.
 ## 4. Analyse et Auto-évaluation
 
 ### 4.1. Points Forts de l'Implémentation
--   **Expérience Utilisateur (UX) :** Le son au survol et l'autoplay intelligent sur mobile rendent le portfolio très dynamique.
+-   **Expérience Utilisateur (UX) :** Navigation fluide et rapide grâce à l'utilisation d'images statiques dans la grille, évitant les surcharges réseau.
 -   **Robustesse Technique :** La base de données persistante permet une véritable gestion de contenu.
 -   **Design Adaptatif :** La grille fluide gère parfaitement les différents formats (carré vs 16:9).
 
