@@ -192,33 +192,21 @@
 
         // Function that attaches all necessary listeners
         function initializeEventListeners() {
-            const isMobile = window.innerWidth <= 767;
-
-            // Click to open a product modal OR STOP video on mobile
+            // Click to open a product modal AND STOP the background preview
             document.querySelectorAll('.openProductModal').forEach(button => {
                 button.onclick = function(e) {
                     e.preventDefault();
-
-                    const videoPreview = button.querySelector('video');
-
-                    // ON MOBILE: If video is playing (not paused), tap stops it first
-                    if (isMobile && videoPreview && !videoPreview.paused) {
-                        videoPreview.pause();
-                        videoPreview.muted = true;
-                        videoPreview.load(); // Back to poster
-                        videoPreview.dataset.manualStop = "true"; // Flag to prevent immediate restart by IntersectionObserver
-                        return; // Prevent opening modal on first tap that stops video
-                    }
 
                     const modalId = button.getAttribute('data-modal');
                     const modal = document.getElementById(modalId);
 
                     if (modal) {
-                        // Stop all grid previews when opening a modal
+                        // Stop ALL grid previews immediately (including the one we clicked on)
                         document.querySelectorAll('.grid-video').forEach(v => {
                             v.pause();
                             v.muted = true;
-                            v.load();
+                            v.load(); // Forces back to poster
+                            v.dataset.manualStop = "true"; // Prevents IntersectionObserver from restarting it while modal is open
                         });
 
                         modal.style.display = 'block';
