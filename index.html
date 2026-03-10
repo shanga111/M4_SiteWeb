@@ -235,7 +235,7 @@
 
             if (isMobile) {
                 // Mobile: Autoplay on Scroll (Intersection Observer)
-                // Assure qu'une seule vidéo est lancée à la fois (celle au centre)
+                // Assure qu'une seule vidéo est lancée à la fois (celle au centre) avec le SON activé
                 const options = {
                     root: null,
                     rootMargin: '-40% 0px -40% 0px', // Détection précise du centre
@@ -246,9 +246,15 @@
                     entries.forEach(entry => {
                         const video = entry.target;
                         if (entry.isIntersecting) {
-                            video.play().catch(e => console.log("Autoplay blocked", e));
+                            video.muted = false; // Activation du son
+                            video.play().catch(e => {
+                                console.log("Autoplay avec son bloqué, tentative en muet", e);
+                                video.muted = true;
+                                video.play();
+                            });
                         } else {
                             video.pause();
+                            video.muted = true;
                             video.load(); // Force le retour au poster PNG
                         }
                     });
@@ -256,14 +262,20 @@
 
                 gridVideos.forEach(v => observer.observe(v));
             } else {
-                // Desktop: Play on Hover
+                // Desktop: Play on Hover avec SON activé
                 gridVideos.forEach(video => {
                     const portfolioItem = video.closest('.portfolio-item');
                     portfolioItem.addEventListener('mouseenter', () => {
-                        video.play();
+                        video.muted = false; // Activation du son
+                        video.play().catch(e => {
+                            console.log("Lecture au survol avec son bloquée, tentative en muet", e);
+                            video.muted = true;
+                            video.play();
+                        });
                     });
                     portfolioItem.addEventListener('mouseleave', () => {
                         video.pause();
+                        video.muted = true;
                         video.load(); // Force le retour au poster PNG
                     });
                 });
