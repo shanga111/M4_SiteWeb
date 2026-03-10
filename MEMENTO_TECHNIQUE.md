@@ -70,7 +70,7 @@ Le fichier `server.js` est le contrôleur central de l'application.
 
 ### 2.3. Architecture Frontend et Fonctionnalités
 
-1.  **Grille Responsive Dynamique :** Utilisation de `vw` (viewport width) pour garantir des vignettes carrées (1:1) sur tous les écrans, avec une adaptation du nombre de colonnes (3 sur PC, 2 sur Tablette, 1 sur Mobile). Le site n'utilise pas d'images statiques de couverture (posters), s'appuyant directement sur la première frame de la vidéo.
+1.  **Grille Responsive Dynamique :** Utilisation de `vw` (viewport width) pour garantir des vignettes carrées (1:1) sur tous les écrans, avec une adaptation du nombre de colonnes (3 sur PC, 2 sur Tablette, 1 sur Mobile). Le site utilise des images statiques de couverture (`poster`) pour améliorer le temps de chargement initial.
 2.  **Interactions Audio-Visuelles :**
     -   **Son au survol :** Sur Desktop, le survol d'une vignette active la vidéo avec le son (`muted = false`).
     -   **Autoplay Mobile Intelligent :** Utilisation de l'API `IntersectionObserver` avec un masque central (`rootMargin`) pour ne lancer que la vidéo située au milieu de l'écran sur mobile.

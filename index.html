@@ -65,44 +65,9 @@
 
 
 <div class="popup-icon">
-    <button id="modBtn" class="modal-btn"><img src="img/contact-icon.png" alt="Icone Contact"></button>
-</div>
-
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="header-title">Me contacter <em>ERACOM</em></h3>
-            <div class="close-btn"><img src="img/close_contact.png" alt="Fermer la modale"></div>
-        </div>
-        <div class="modal-body">
-            <div class="col-md-6 col-md-offset-3">
-                <form id="contact" action="" method="post">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <fieldset>
-                                <input name="name" type="text" class="form-control" id="name" placeholder="Votre nom..." required="">
-                            </fieldset>
-                        </div>
-                        <div class="col-md-12">
-                            <fieldset>
-                                <input name="email" type="email" class="form-control" id="email" placeholder="Votre email..." required="">
-                            </fieldset>
-                        </div>
-                        <div class="col-md-12">
-                            <fieldset>
-                                <textarea name="message" rows="6" class="form-control" id="message" placeholder="Votre message ou question sur un projet..." required=""></textarea>
-                            </fieldset>
-                        </div>
-                        <div class="col-md-12">
-                            <fieldset>
-                                <button type="submit" id="form-submit" class="btn">Envoyer le message</button>
-                            </fieldset>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <a href="https://www.tiktok.com/@0banax" target="_blank" id="tiktokLink" class="modal-btn">
+        <img src="img/logotiktok.png" alt="TikTok">
+    </a>
 </div>
 
 <!-- Container for dynamically generated product modals -->
@@ -148,6 +113,9 @@
                 let modalsHtml = '';
 
                 products.forEach(product => {
+                    // Generate poster path from video path (assuming .mp4 to .png)
+                    const posterPath = product.video.replace('video/', 'img/').replace('.mp4', '.png');
+
                     // Creating the product card
                     portfolioHtml += `
                         <div class="col-md-4 col-sm-6 ${product.is_wide ? 'wide-item' : ''}">
@@ -160,7 +128,7 @@
                                         </div>
                                     </div>
                                     <div class="image">
-                                        <video id="${product.video_preview_id}" loop muted preload="metadata">
+                                        <video id="${product.video_preview_id}" loop muted preload="metadata" poster="${posterPath}">
                                             <source src="${product.video}" type="video/mp4">
                                         </video>
                                     </div>
@@ -181,7 +149,7 @@
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-md-8 col-md-offset-2">
-                                                <video id="modalVideoPreview-${product.video_preview_id}" width="100%" controls loop style="margin-bottom: 25px; border-radius: 8px;">
+                                                <video id="modalVideoPreview-${product.video_preview_id}" width="100%" controls loop style="margin-bottom: 25px; border-radius: 8px;" poster="${posterPath}">
                                                     <source src="${product.video}" type="video/mp4">
                                                     Votre navigateur ne supporte pas la balise vidéo.
                                                 </video>
@@ -222,11 +190,6 @@
             }
         }
 
-        // Function to open the main contact modal
-        window.openContactModal = function() {
-            document.getElementById('modal').style.display = 'block';
-        }
-
         // Function that attaches all necessary listeners
         function initializeEventListeners() {
             // Hover over portfolio videos
@@ -261,6 +224,14 @@
                     e.preventDefault();
                     const modalId = button.getAttribute('data-modal');
                     const modal = document.getElementById(modalId);
+                    const videoId = button.getAttribute('data-video');
+                    const previewVideo = document.getElementById(videoId);
+
+                    // Pause preview video before opening modal
+                    if (previewVideo) {
+                        previewVideo.pause();
+                        previewVideo.muted = true;
+                    }
 
                     if (modal) {
                         modal.style.display = 'block';
@@ -296,6 +267,15 @@
                     entries.forEach(entry => {
                         const video = entry.target;
                         if (entry.isIntersecting) {
+                            // Pause all other videos before playing the current one
+                            document.querySelectorAll('.portfolio-item video').forEach(v => {
+                                if (v !== video) {
+                                    v.pause();
+                                    v.currentTime = 0;
+                                    v.muted = true;
+                                }
+                            });
+
                             video.muted = false; // Attempt to play with sound
                             video.currentTime = 0;
                             video.play().catch(error => {
@@ -315,14 +295,7 @@
             }
         }
 
-        // --- 3. HANDLING EXISTING MODALS (Contact, etc.) ---
-        const mainContactModal = document.getElementById('modal');
-        const closeMainContactButton = mainContactModal ? mainContactModal.querySelector('.close-btn') : null;
-
-        if (closeMainContactButton) {
-            closeMainContactButton.onclick = function() { closeModal(mainContactModal); }
-        }
-
+        // --- 3. HANDLING MODALS ---
         window.onclick = function(event) {
             document.querySelectorAll('.modal').forEach(modal => {
                 if (event.target === modal) {
@@ -330,55 +303,6 @@
                 }
             });
         }
-
-        const modBtn = document.getElementById('modBtn');
-        if (modBtn) {
-            modBtn.onclick = function() {
-                if (document.getElementById('modal')) {
-                    document.getElementById('modal').style.display = 'block';
-                }
-            }
-        }
-
-        // --- 4. CONTACT FORM HANDLING ---
-        const contactForm = document.getElementById('contact');
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevents page reload
-
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
-            const submitButton = document.getElementById('form-submit');
-            const originalButtonText = submitButton.textContent;
-
-            submitButton.textContent = 'Envoi...';
-            submitButton.disabled = true;
-
-            fetch('/api/contact', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name, email, message }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.id) {
-                    alert('Message envoyé avec succès !');
-                    contactForm.reset(); // Clears the form
-                } else {
-                    alert('Erreur: ' + data.error);
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-            })
-            .finally(() => {
-                submitButton.textContent = originalButtonText;
-                submitButton.disabled = false;
-            });
-        });
     });
 </script>
 
