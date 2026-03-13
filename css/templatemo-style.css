@@ -368,6 +368,7 @@ nav {
 
 .full-screen-portfolio { /* <-- AJOUTEZ CE SÉLECTEUR ICI */
     background-color: #232323;
+    min-height: 50vh; /* Prevents layout jump during dynamic load */
 }
 
 .full-screen-portfolio .portfolio-item {
