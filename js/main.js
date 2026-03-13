@@ -34,26 +34,28 @@ jQuery(document).ready(function($) {
 
           // data-scrollTo = section scrolling to name
           var scrollTo = $(this).attr('data-scrollTo');
+          var $target = $('#' + scrollTo);
+
+          // If the target exists on the page, animate scroll. Otherwise, let default link behavior happen.
+          if ($target.length > 0) {
+            // toggle active class on and off. added 1/24/17
+            $( "a.scrollTo" ).each(function() {
+              if(scrollTo == $(this).attr('data-scrollTo')){
+                $(this).addClass('active');
+              }else{
+                $(this).removeClass('active');
+              }
+            });
 
 
-          // toggle active class on and off. added 1/24/17
-          $( "a.scrollTo" ).each(function() {
-            if(scrollTo == $(this).attr('data-scrollTo')){
-              $(this).addClass('active');
-            }else{
-              $(this).removeClass('active');
-            }
-          });
+            // animate and scroll to the sectin
+            $('body, html').animate({
 
-
-          // animate and scroll to the sectin
-          $('body, html').animate({
-
-            // the magic - scroll to section
-            "scrollTop": $('#'+scrollTo).offset().top
-          }, 1000 );
-          return false;
-
+              // the magic - scroll to section
+              "scrollTop": $target.offset().top
+            }, 1000 );
+            return false;
+          }
         })
 
 

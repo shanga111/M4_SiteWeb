@@ -171,6 +171,16 @@
                 // --- 2. RE-INITIALIZING EVENT LISTENERS ---
                 initializeEventListeners();
                 setupPreviewVideos();
+
+                // Check for hash in URL and scroll if needed
+                if (window.location.hash === '#portfolio') {
+                    setTimeout(() => {
+                        const targetOffset = $('#portfolio').offset().top;
+                        $('body, html').animate({
+                            "scrollTop": targetOffset
+                        }, 1000);
+                    }, 500);
+                }
             })
             .catch(error => {
                 console.error('Error fetching products:', error);
