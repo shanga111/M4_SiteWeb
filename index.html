@@ -59,7 +59,7 @@
             </div>
         </div>
     </div>
-    <video autoplay="" loop="" muted>
+    <video id="bgVideo" autoplay="" loop="" muted>
         <source src="video/Backgroundvideo.mp4" type="video/mp4" />
     </video>
 </div>
@@ -126,6 +126,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const scrollToId = sessionStorage.getItem('shouldScrollTo');
         const scrollBehavior = sessionStorage.getItem('scrollBehavior');
+        const backgroundVideo = document.getElementById('bgVideo');
 
         // If we have an intentional "instant" scroll (from about.html), do it as early as possible
         if (scrollToId && scrollBehavior === 'auto') {
@@ -133,6 +134,7 @@
             if (target) {
                 // Immediate jump
                 target.scrollIntoView({ behavior: 'auto' });
+                if (backgroundVideo) backgroundVideo.pause();
             }
         } else if (!scrollToId) {
             // Reset scroll to top immediately on load/refresh if no specific intent is found
@@ -165,7 +167,7 @@
                                         </div>
                                     </div>
                                     <div class="image">
-                                        <video id="video-preview-${product.video_preview_id}" width="100%" muted loop playsinline poster="${posterPath}" class="grid-video" preload="metadata">
+                                        <video id="${product.video_preview_id}" width="100%" muted loop playsinline poster="${posterPath}" class="grid-video" preload="metadata">
                                             <source src="${product.video}" type="video/mp4">
                                         </video>
                                     </div>
@@ -229,6 +231,10 @@
                             targetElement.scrollIntoView({ behavior: 'auto' });
                             sessionStorage.removeItem('shouldScrollTo');
                             sessionStorage.removeItem('scrollBehavior');
+
+                            // Ensure background video is paused if we jumped to portfolio
+                            if (backgroundVideo) backgroundVideo.pause();
+
                             // Small delay to ensure the scroll is applied before showing content
                             requestAnimationFrame(() => {
                                 requestAnimationFrame(() => {
@@ -322,6 +328,7 @@
         // --- 4. PREVIEW VIDEO LOGIC (HOVER & SCROLL) ---
         function setupPreviewVideos() {
             const gridVideos = document.querySelectorAll('.grid-video');
+            const bgVideo = document.getElementById('bgVideo');
             const isMobile = window.innerWidth <= 767;
 
             // Unlock audio on first interaction
@@ -336,35 +343,51 @@
             window.addEventListener('touchstart', unlockAudio);
 
             if (isMobile) {
+                // Fonction pour vérifier si une vidéo de la grille est actuellement en train de jouer
+                const isAnyGridVideoPlaying = () => {
+                    return Array.from(gridVideos).some(v => !v.paused);
+                };
+
+                // Observer pour la vidéo de fond (Hero)
+                const bgObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (bgVideo) {
+                            // On ne lance la vidéo de fond que si elle est visible ET qu'aucune vidéo de la grille ne joue
+                            if (entry.isIntersecting && !isAnyGridVideoPlaying()) {
+                                bgVideo.play().catch(() => {});
+                            } else {
+                                bgVideo.pause();
+                            }
+                        }
+                    });
+                }, { threshold: 0 });
+
+                const heroSection = document.getElementById('video-container');
+                if (heroSection) bgObserver.observe(heroSection);
+
                 // Mobile: Autoplay on Scroll (Intersection Observer)
-                // Assure qu'une SEULE vidéo est lancée à la fois (celle au centre) avec le SON activé
                 const options = {
                     root: null,
-                    rootMargin: '-45% 0px -45% 0px', // Zone de détection très étroite au centre (10% de l'écran)
+                    rootMargin: '-45% 0px -45% 0px',
                     threshold: 0
                 };
 
                 const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        const video = entry.target;
+                    const intersectingEntry = entries.find(e => e.isIntersecting);
 
-                        // Check if any modal is currently open
+                    if (intersectingEntry) {
+                        const video = intersectingEntry.target;
                         const isModalOpen = !!document.querySelector('.modal[style*="display: block"]');
 
-                        if (entry.isIntersecting && !isModalOpen) {
-                            // Reset manual stop flag when entering focus
-                            // (Permet de relancer l'autoplay si l'utilisateur scroll et revient sur la vidéo après un arrêt manuel)
-                            // Note: Si on veut qu'elle reste arrêtée tant qu'elle est au centre, on gère différemment.
+                        if (!isModalOpen && video.dataset.manualStop !== "true") {
+                            // Arrêt immédiat de TOUTES les autres vidéos, y compris le fond
+                            if (bgVideo) bgVideo.pause();
 
-                            // Si l'utilisateur a arrêté manuellement cette vidéo, on ne la relance pas immédiatement
-                            if (video.dataset.manualStop === "true") return;
-
-                            // On force l'arrêt de TOUTES les autres vidéos pour garantir la lecture unique
                             gridVideos.forEach(v => {
                                 if (v !== video) {
                                     v.pause();
                                     v.muted = true;
-                                    v.load(); // Full reset for others to be clean
+                                    v.load();
                                 }
                             });
 
@@ -373,12 +396,27 @@
                                 video.muted = true;
                                 video.play();
                             });
-                        } else {
-                            // Reset state when leaving focus
+                        }
+                    }
+
+                    entries.forEach(entry => {
+                        if (!entry.isIntersecting) {
+                            const video = entry.target;
                             video.dataset.manualStop = "false";
                             video.pause();
                             video.muted = true;
-                            video.load(); // Retour au poster PNG
+                            video.load();
+
+                            // Si plus aucune vidéo de grille ne joue et que le hero est visible, on peut relancer le hero
+                            setTimeout(() => {
+                                if (!isAnyGridVideoPlaying() && bgVideo) {
+                                    // Vérifier manuellement si le hero est dans le viewport
+                                    const heroRect = heroSection.getBoundingClientRect();
+                                    if (heroRect.top < window.innerHeight && heroRect.bottom > 0) {
+                                        bgVideo.play().catch(() => {});
+                                    }
+                                }
+                            }, 50);
                         }
                     });
                 }, options);
