@@ -173,16 +173,16 @@
                 setupPreviewVideos();
 
                 // Check for scroll intent in sessionStorage
-                const shouldScrollTo = sessionStorage.getItem('shouldScrollTo');
-                if (shouldScrollTo === 'portfolio') {
+                const scrollToId = sessionStorage.getItem('shouldScrollTo');
+                if (scrollToId) {
                     setTimeout(() => {
-                        const portfolio = document.getElementById('portfolio');
-                        if (portfolio) {
-                            portfolio.scrollIntoView({ behavior: 'smooth' });
+                        const targetElement = document.getElementById(scrollToId);
+                        if (targetElement) {
+                            targetElement.scrollIntoView({ behavior: 'smooth' });
                             // Clear the flag after scrolling
                             sessionStorage.removeItem('shouldScrollTo');
                         }
-                    }, 300); // Reduced delay for better reactivity
+                    }, 300); // Small delay to ensure rendering is complete
                 }
             })
             .catch(error => {
