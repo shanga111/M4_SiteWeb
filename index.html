@@ -99,7 +99,18 @@
 <script src="js/main.js"></script>
 
 <script>
+    // Force the page to start at the top on refresh (F5), unless we have an intentional scroll
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+        // Reset scroll to top immediately on load/refresh if no specific intent is found
+        const scrollToId = sessionStorage.getItem('shouldScrollTo');
+        if (!scrollToId) {
+            window.scrollTo(0, 0);
+        }
+
         const portfolioContainer = document.getElementById('portfolio-container');
         const modalsContainer = document.getElementById('product-modals-container');
 
@@ -172,14 +183,17 @@
                 setupPreviewVideos();
 
                 // Check for scroll intent in sessionStorage
-                const scrollToId = sessionStorage.getItem('shouldScrollTo');
-                if (scrollToId) {
+                const pendingScrollToId = sessionStorage.getItem('shouldScrollTo');
+                const scrollBehavior = sessionStorage.getItem('scrollBehavior') || 'smooth';
+
+                if (pendingScrollToId) {
                     setTimeout(() => {
-                        const targetElement = document.getElementById(scrollToId);
+                        const targetElement = document.getElementById(pendingScrollToId);
                         if (targetElement) {
-                            targetElement.scrollIntoView({ behavior: 'smooth' });
-                            // Clear the flag after scrolling
+                            targetElement.scrollIntoView({ behavior: scrollBehavior });
+                            // Clear flags after scrolling
                             sessionStorage.removeItem('shouldScrollTo');
+                            sessionStorage.removeItem('scrollBehavior');
                         }
                     }, 300); // Small delay to ensure rendering is complete
                 }
