@@ -127,7 +127,7 @@
                                         </div>
                                     </div>
                                     <div class="image">
-                                        <video id="video-preview-${product.video_preview_id}" width="100%" muted loop playsinline poster="${posterPath}" class="grid-video" preload="metadata">
+                                        <video id="video-preview-${product.video_preview_id}" width="100%" muted loop playsinline poster="${posterPath}" class="grid-video" preload="metadata" loading="lazy">
                                             <source src="${product.video}" type="video/mp4">
                                         </video>
                                     </div>
@@ -172,21 +172,17 @@
                 initializeEventListeners();
                 setupPreviewVideos();
 
-                // Check for hash in URL and scroll if needed
-                // Only scroll if sessionStorage has the 'shouldScrollTo' flag set to 'portfolio'
-                if (window.location.hash === '#portfolio' && sessionStorage.getItem('shouldScrollTo') === 'portfolio') {
+                // Check for scroll intent in sessionStorage
+                const shouldScrollTo = sessionStorage.getItem('shouldScrollTo');
+                if (shouldScrollTo === 'portfolio') {
                     setTimeout(() => {
-                        const targetOffset = $('#portfolio').offset().top;
-                        $('body, html').animate({
-                            "scrollTop": targetOffset
-                        }, 1000);
-                        // Clear the flag after scrolling
-                        sessionStorage.removeItem('shouldScrollTo');
-                    }, 500);
-                } else {
-                    if (window.location.hash === '#portfolio') {
-                        sessionStorage.removeItem('shouldScrollTo');
-                    }
+                        const portfolio = document.getElementById('portfolio');
+                        if (portfolio) {
+                            portfolio.scrollIntoView({ behavior: 'smooth' });
+                            // Clear the flag after scrolling
+                            sessionStorage.removeItem('shouldScrollTo');
+                        }
+                    }, 300); // Reduced delay for better reactivity
                 }
             })
             .catch(error => {
