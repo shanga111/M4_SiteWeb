@@ -47,19 +47,6 @@ const db = new sqlite3.Database('portfolio.db', (err) => {
         console.log("No portfolio items found, inserting default items.");
         const items = [
           {
-            name: 'AizenEdit',
-            wide: 0,
-            comments: `Aizen (Bleach) – 'Too Much Spiritual Pressure'
-
-Musique : LUA NA PRAÇA.
-
-Concept : Capturer l'aura de supériorité absolue d'Aizen.
-
-Style : Profondeur de champ artificielle pour un rendu professionnel.
-
-Technique : Caméra 3D, Image Transformer, CC Crimson, S_BlurMoCurves, Deep Glow & Drop Shadow.`
-          },
-          {
             name: 'BladeRunnerEdit',
             wide: 0,
             comments: `1. Blade Runner Remaster – 'Im literally Him'
@@ -164,9 +151,22 @@ Style : Dynamique. Rotoscope sur l'intro et watermark inversée sur banderole.
 Technique : Slide transitions, Face Tracking, S_BlurMoCurves, Deep Glow & Drop Shadow.`
           },
           {
+            name: 'AizenEdit',
+            wide: 0,
+            comments: `9. Aizen (Bleach) – 'Too Much Spiritual Pressure'
+
+Musique : LUA NA PRAÇA.
+
+Concept : Capturer l'aura de supériorité absolue d'Aizen.
+
+Style : Profondeur de champ artificielle pour un rendu professionnel.
+
+Technique : Caméra 3D, Image Transformer, CC Crimson, S_BlurMoCurves, Deep Glow & Drop Shadow.`
+          },
+          {
             name: 'LegoStopMotion(Brickfilm)',
             wide: 1,
-            comments: `9. Brickfilm (2020) – 'Premiers pas en Stop-Motion'
+            comments: `10. Brickfilm (2020) – 'Premiers pas en Stop-Motion'
 
 Outils : Stop Motion Studio Pro.
 
