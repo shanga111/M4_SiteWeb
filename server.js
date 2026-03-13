@@ -7,6 +7,20 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
+// Security and Performance Middleware
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  next();
+});
+
+// Cache control for static assets (images and videos)
+app.use(['/img', '/video'], (req, res, next) => {
+  res.setHeader('Cache-Control', 'public, max-age=86400'); // 24 hours
+  next();
+});
+
 // --- Database Initialization (Persistent) ---
 const db = new sqlite3.Database('portfolio.db', (err) => {
   if (err) {
@@ -26,15 +40,6 @@ const db = new sqlite3.Database('portfolio.db', (err) => {
       video_preview_id TEXT NOT NULL,
       is_wide INTEGER DEFAULT 0,
       comments TEXT DEFAULT ''
-    )`);
-
-    // Create "messages" table (maintained for potential future contact needs)
-    db.run(`CREATE TABLE IF NOT EXISTS messages (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      email TEXT NOT NULL,
-      message TEXT NOT NULL,
-      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
 
     // Insert initial data (Portfolio ERACOM)
@@ -212,8 +217,9 @@ Style : Animation image par image (Stop-motion).`
 
 // Simple authentication middleware
 const checkAdmin = (req, res, next) => {
+    const adminPassword = process.env.ADMIN_PASSWORD || 'admin';
     const password = req.headers['authorization'];
-    if (password === 'admin') {
+    if (password === adminPassword) {
         next();
     } else {
         res.status(401).json({ error: 'Unauthorized' });
@@ -225,18 +231,6 @@ app.get('/api/products', (req, res) => {
   db.all("SELECT * FROM products", [], (err, rows) => {
     if (err) res.status(500).json({ "error": err.message });
     else res.json(rows);
-  });
-});
-
-app.post('/api/contact', (req, res) => {
-  const { name, email, message } = req.body;
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: 'All fields are required.' });
-  }
-  const sql = 'INSERT INTO messages (name, email, message) VALUES (?, ?, ?)';
-  db.run(sql, [name, email, message], function(err) {
-    if (err) res.status(500).json({ error: err.message });
-    else res.json({ message: 'Message sent successfully!', id: this.lastID });
   });
 });
 
