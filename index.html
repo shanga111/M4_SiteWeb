@@ -173,13 +173,20 @@
                 setupPreviewVideos();
 
                 // Check for hash in URL and scroll if needed
-                if (window.location.hash === '#portfolio') {
+                // Only scroll if sessionStorage has the 'shouldScrollTo' flag set to 'portfolio'
+                if (window.location.hash === '#portfolio' && sessionStorage.getItem('shouldScrollTo') === 'portfolio') {
                     setTimeout(() => {
                         const targetOffset = $('#portfolio').offset().top;
                         $('body, html').animate({
                             "scrollTop": targetOffset
                         }, 1000);
+                        // Clear the flag after scrolling
+                        sessionStorage.removeItem('shouldScrollTo');
                     }, 500);
+                } else {
+                    if (window.location.hash === '#portfolio') {
+                        sessionStorage.removeItem('shouldScrollTo');
+                    }
                 }
             })
             .catch(error => {
