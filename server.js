@@ -49,120 +49,130 @@ const db = new sqlite3.Database('portfolio.db', (err) => {
           {
             name: 'BladeRunnerEdit',
             wide: 0,
-            comments: `1. Blade Runner Remaster – "Im literally Him"
+            comments: `1. Blade Runner Remaster – 'Im literally Him'
+
 Musique : Tame Impala - Let It Happen (Slowed + Reverb).
 
-Pourquoi cet édit ? : Inspiré par la tendance "Literally Me". L'idée est d'illustrer l'acceptation et le lâcher-prise à travers le personnage de K.
+Concept : Basé sur la trend 'Literally Me'. L'intro souligne le cadeau de liberté offert à Joi.
 
-Pourquoi ce style ? : Ambiance libre et aérienne. Le drop symbolise le cadeau de la liberté.
+Style : Vibe 'chill' et libératrice. Le drop symbolise l'acceptation : 'Let it happen'.
 
-Effets utilisés : Color Correction (CC) personnalisée, Element 3D, Deep Glow & Drop Shadow sur les textes, Ripple Dissolve, CC Wide Time.`
+Technique : Element 3D (textes), Deep Glow & Drop Shadow, Ripple Dissolve, CC Wide Time, S_BlurMoCurves.`
           },
           {
             name: 'DarthVaderEdit',
             wide: 0,
-            comments: `2. Darth Vader – "#1 MC oat"
+            comments: `2. Darth Vader – '#1 MC oat'
+
 Musique : ZUMA JUMP (Super Slowed).
 
-Pourquoi cet édit ? : Montrer la puissance brute et l'intimidation du Seigneur Sith.
+Concept : La figure de l'ange déchu (réf. à Cabanel). La chute d'Anakin vers l'obscurité.
 
-Pourquoi ce style ? : Hardstyle / Phonk. Montage agressif centré sur la transition entre Anakin et Vader.
+Style : Sombre et puissant. Utilisation du Face Tracking pour renforcer l'intensité du regard.
 
-Effets utilisés : Color Correction (CC) contrastée, Twitch, Flashs rythmés, Deep Glow & Drop Shadow sur les textes.`
+Technique : CC Crimson, Ripple Dissolve au drop, CC Wide Time, S_BlurMoCurves, Deep Glow & Drop Shadow.`
           },
           {
             name: 'DarkEdit',
             wide: 0,
-            comments: `3. Dark – "The question is not where but when"
+            comments: `3. Dark – 'The question is not where but when'
+
 Musique : Crystal Castles - Suffocation (Instrumental).
 
-Pourquoi cet édit ? : Illustrer la boucle temporelle infinie et la fatalité des personnages.
+Concept : Retracer le 'cycle' temporel. Intégration du logo Triquetra (Sic Mundus Creatus Est).
 
-Pourquoi ce style ? : Froid et glitchy. Utilisation de l'aberration chromatique pour simuler une distorsion du temps.
+Style : Mouvement de rotation style aiguille d'horloge. Sound design tic-tac pour marquer la fatalité.
 
-Effets utilisés : Color Correction (CC) bleutée, RGB Split, Film Grain, Deep Glow & Drop Shadow sur les textes, Masking.`
+Technique : Face Tracking, S_BlurMoCurves, Deep Glow & Drop Shadow, étalonnage froid.`
           },
           {
             name: 'DarkEdit2',
             wide: 0,
-            comments: `4. Dark – "I AM YOU"
+            comments: `4. Dark – 'I AM YOU'
+
 Musique : Skins (Slowed).
 
-Pourquoi cet édit ? : Focus sur le choc psychologique entre Jonas et son futur lui-même.
+Concept : La rencontre entre le Jonas du futur et celui du passé pour perpétuer la boucle.
 
-Pourquoi ce style ? : Pesant et dramatique. Le texte est l'élément central de la révélation.
+Style : Dramatique et narratif. Focus sur la dualité du personnage.
 
-Effets utilisés : Color Correction (CC) dramatique, Typographie cinétique, Deep Glow & Drop Shadow sur les textes, S_BlurMoCurves.`
+Technique : Element 3D, CC Crimson, CC Wide Time, Slide transitions, Reverse, Face Tracking, S_BlurMoCurves.`
           },
           {
             name: 'EllieEdit',
             wide: 0,
-            comments: `5. Ellie (TLOU) – "She's so Tuff"
+            comments: `5. Ellie (TLOU) – 'She's so Tuff'
+
 Musique : MONTAGEM FANTÁSTICA.
 
-Pourquoi cet édit ? : Raconter la perte d'innocence d'Ellie et sa transformation en survivante redoutable.
+Concept : La survie brutale d'Ellie.
 
-Pourquoi ce style ? : Brutal et contrasté. On passe d'un dialogue calme à une action nerveuse.
+Style : Cinématographique (barres noires), flashs inversés et grain à l'image.
 
-Effets utilisés : Color Correction (CC) automnale, RSMB, Overlays de poussière, Deep Glow & Drop Shadow sur les textes.`
+Technique : Shatter (verre brisé sur 'Quick'), Motion Design (compteur d'aura), Face Tracking, S_BlurMoCurves.`
           },
           {
             name: 'AizenEdit',
             wide: 0,
-            comments: `6. Aizen (Bleach) – "Too Much Spiritual Pressure"
-Musique : LUA NA PRAÇA (Brazilian Funk).
+            comments: `6. Aizen (Bleach) – 'Too Much Spiritual Pressure'
 
-Pourquoi cet édit ? : Capturer l'aura de supériorité et le charisme d'Aizen.
+Musique : LUA NA PRAÇA.
 
-Pourquoi ce style ? : High Energy. Montage ultra-rapide synchronisé sur la basse pour un impact maximal.
+Concept : Capturer l'aura de supériorité absolue d'Aizen.
 
-Effets utilisés : Color Correction (CC) saturée, Twixtor (slow-mo), Shakes, Deep Glow & Drop Shadow sur les textes.`
+Style : Profondeur de champ artificielle pour un rendu professionnel.
+
+Technique : Caméra 3D, Image Transformer, CC Crimson, S_BlurMoCurves, Deep Glow & Drop Shadow.`
           },
           {
             name: 'Gun-WooEdit',
             wide: 0,
-            comments: `7. Geon-Woo (Bloodhounds) – "He's so tuff"
+            comments: `7. Geon-Woo (Bloodhounds) – 'He's so tuff'
+
 Musique : MONTAGEM AROMA (Slowed).
 
-Pourquoi cet édit ? : Valoriser la technique de boxe et l'intensité des impacts dans la série.
+Concept : Mettre en avant le côté 'badass' du protagoniste.
 
-Pourquoi ce style ? : Urbain et percutant. Le rythme suit chaque coup porté.
+Style : Utilisation du Rotoscope pour placer des panoramiques derrière le personnage. Pas de RSMB.
 
-Effets utilisés : Color Correction (CC) froide, RSMB, Zooms d'impact, Deep Glow & Drop Shadow sur les textes.`
+Technique : S_BlurMoCurves (zooms/slides), Face Tracking, Deep Glow & Drop Shadow.`
           },
           {
             name: 'GoldenBrownEdit',
             wide: 0,
-            comments: `8. Knight Edit – "Golden Brown"
-Musique : The Stranglers - Golden Brown X Love Story (Slowed).
+            comments: `8. Knight Edit – 'Golden Brown'
 
-Pourquoi cet édit ? : Créer un décalage esthétique entre la musique vintage et l'imagerie médiévale.
+Musique : Golden Brown X Love Story (Slowed).
 
-Pourquoi ce style ? : "Dreamy" et nostalgique. Focus sur la texture de l'armure et la lumière dorée.
+Concept : Succès viral (1.6M de vues). Esthétique médiévale sur un classique de 1981.
 
-Effets utilisés : Color Correction (CC) dorée/sépia, Film Damage, Soft Glow, Deep Glow & Drop Shadow sur les textes.`
+Style : 'Chill' et décontracté. Focus sur l'image et la watermark personnelle.
+
+Technique : S_Shake pour le mouvement organique, CC dorée, S_BlurMoCurves.`
           },
           {
             name: 'LaraEdit',
             wide: 0,
-            comments: `9. Lara Croft – "She's tuff asf"
+            comments: `9. Lara Croft – 'She's tuff asf'
+
 Musique : MINHA NOITE (Ultra Slowed).
 
-Pourquoi cet édit ? : Retracer l'évolution visuelle et le caractère de Lara Croft à travers le temps.
+Concept : L'évolution de l'héroïne à travers les époques.
 
-Pourquoi ce style ? : Fluide et dynamique. Utilisation de Match Cuts pour lier les différentes époques.
+Style : Dynamique. Rotoscope sur l'intro et watermark inversée sur banderole.
 
-Effets utilisés : Color Correction (CC) vive, Match Cuts, Slide transitions, Deep Glow & Drop Shadow sur les textes.`
+Technique : Slide transitions, Face Tracking, S_BlurMoCurves, Deep Glow & Drop Shadow.`
           },
           {
             name: 'LegoStopMotion(Brickfilm)',
             wide: 1,
-            comments: `10. Brickfilm (2020) – "Premiers pas en Stop-Motion"
-Outils : Stop Motion Studio Pro (Android).
+            comments: `10. Brickfilm (2020) – 'Premiers pas en Stop-Motion'
 
-Pourquoi l'inclure ? : Vidéo réalisée à l'âge de 14 ans. Pour montrer mon historique dans l'audiovisuel. C'est le point de départ de ma passion, prouvant que j'ai toujours cherché à créer.
+Outils : Stop Motion Studio Pro.
 
-Pourquoi ce style ? : Animation image par image (Stop-motion).`
+Pourquoi l'inclure ? : Projet réalisé à 14 ans. C'est le point de départ de ma passion, prouvant ma détermination à créer avec les moyens du bord.
+
+Style : Animation image par image (Stop-motion).`
           }
         ];
 
