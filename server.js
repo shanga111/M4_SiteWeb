@@ -49,15 +49,15 @@ const db = new sqlite3.Database('portfolio.db', (err) => {
           {
             name: 'AizenEdit',
             wide: 0,
-            comments: `AizenEdit – 'Sōsuke Aizen (Bleach) – Le plan parfait'
+            comments: `Aizen (Bleach) – 'Too Much Spiritual Pressure'
 
-Musique : Inconnu.
+Musique : LUA NA PRAÇA.
 
-Concept : La supériorité et le calme d'Aizen.
+Concept : Capturer l'aura de supériorité absolue d'Aizen.
 
-Style : Épuré et intimidant.
+Style : Profondeur de champ artificielle pour un rendu professionnel.
 
-Technique : Étalonnage, transitions fluides.`
+Technique : Caméra 3D, Image Transformer, CC Crimson, S_BlurMoCurves, Deep Glow & Drop Shadow.`
           },
           {
             name: 'BladeRunnerEdit',
