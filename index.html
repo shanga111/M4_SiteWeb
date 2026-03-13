@@ -15,7 +15,26 @@
     <link href="https://fonts.googleapis.com/css?family=Kanit:100,200,300,400,500,600,700,800,900" rel="stylesheet">
 
     <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
-
+    <style>
+        /* Prevents flash of the hero section when jumping directly to portfolio */
+        .is-jumping #video-container,
+        .is-jumping footer,
+        .is-jumping #portfolio-container {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+    </style>
+    <script>
+        // Immediate check to hide content if we are jumping
+        (function() {
+            try {
+                if (sessionStorage.getItem('shouldScrollTo') === 'portfolio' &&
+                    sessionStorage.getItem('scrollBehavior') === 'auto') {
+                    document.documentElement.classList.add('is-jumping');
+                }
+            } catch (e) {}
+        })();
+    </script>
 </head>
 
 <body>
@@ -105,9 +124,18 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        // Reset scroll to top immediately on load/refresh if no specific intent is found
         const scrollToId = sessionStorage.getItem('shouldScrollTo');
-        if (!scrollToId) {
+        const scrollBehavior = sessionStorage.getItem('scrollBehavior');
+
+        // If we have an intentional "instant" scroll (from about.html), do it as early as possible
+        if (scrollToId && scrollBehavior === 'auto') {
+            const target = document.getElementById(scrollToId);
+            if (target) {
+                // Immediate jump
+                target.scrollIntoView({ behavior: 'auto' });
+            }
+        } else if (!scrollToId) {
+            // Reset scroll to top immediately on load/refresh if no specific intent is found
             window.scrollTo(0, 0);
         }
 
@@ -182,20 +210,39 @@
                 initializeEventListeners();
                 setupPreviewVideos();
 
-                // Check for scroll intent in sessionStorage
+                // Check for scroll intent in sessionStorage (Final correction after products are loaded)
                 const pendingScrollToId = sessionStorage.getItem('shouldScrollTo');
-                const scrollBehavior = sessionStorage.getItem('scrollBehavior') || 'smooth';
+                const pendingScrollBehavior = sessionStorage.getItem('scrollBehavior') || 'smooth';
 
                 if (pendingScrollToId) {
-                    setTimeout(() => {
-                        const targetElement = document.getElementById(pendingScrollToId);
-                        if (targetElement) {
-                            targetElement.scrollIntoView({ behavior: scrollBehavior });
-                            // Clear flags after scrolling
+                    const targetElement = document.getElementById(pendingScrollToId);
+                    if (targetElement) {
+                        if (pendingScrollBehavior === 'smooth') {
+                            // For smooth scroll, we wait a bit for images/videos to start loading and layout to stabilize
+                            setTimeout(() => {
+                                targetElement.scrollIntoView({ behavior: 'smooth' });
+                                sessionStorage.removeItem('shouldScrollTo');
+                                sessionStorage.removeItem('scrollBehavior');
+                            }, 100);
+                        } else {
+                            // For 'auto', we already jumped earlier, but we re-confirm now that content is loaded
+                            targetElement.scrollIntoView({ behavior: 'auto' });
                             sessionStorage.removeItem('shouldScrollTo');
                             sessionStorage.removeItem('scrollBehavior');
+                            // Small delay to ensure the scroll is applied before showing content
+                            requestAnimationFrame(() => {
+                                requestAnimationFrame(() => {
+                                    document.documentElement.classList.remove('is-jumping');
+                                    // Fade in the container
+                                    const pc = document.getElementById('portfolio-container');
+                                    if (pc) pc.style.opacity = '1';
+                                });
+                            });
                         }
-                    }, 300); // Small delay to ensure rendering is complete
+                    }
+                } else {
+                    // No pending scroll, make sure jumping class is removed if it was somehow set
+                    document.documentElement.classList.remove('is-jumping');
                 }
             })
             .catch(error => {

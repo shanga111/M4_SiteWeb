@@ -1,0 +1,8 @@
+
+> app@1.0.0 start
+> node server.js
+
+Server started on http://localhost:3000
+Connected to the persistent SQLite database (portfolio.db).
+Database already contains products.
+Terminated
