@@ -60,22 +60,9 @@ Style : Vibe 'chill' et libératrice. Le drop symbolise l'acceptation : 'Let it 
 Technique : Element 3D (textes), Deep Glow & Drop Shadow, Ripple Dissolve, CC Wide Time, S_BlurMoCurves.`
           },
           {
-            name: 'DarthVaderEdit',
-            wide: 0,
-            comments: `2. Darth Vader – '#1 MC oat'
-
-Musique : ZUMA JUMP (Super Slowed).
-
-Concept : La figure de l'ange déchu (réf. à Cabanel). La chute d'Anakin vers l'obscurité.
-
-Style : Sombre et puissant. Utilisation du Face Tracking pour renforcer l'intensité du regard.
-
-Technique : CC Crimson, Ripple Dissolve au drop, CC Wide Time, S_BlurMoCurves, Deep Glow & Drop Shadow.`
-          },
-          {
             name: 'DarkEdit',
             wide: 0,
-            comments: `3. Dark – 'The question is not where but when'
+            comments: `2. Dark – 'The question is not where but when'
 
 Musique : Crystal Castles - Suffocation (Instrumental).
 
@@ -88,7 +75,7 @@ Technique : Face Tracking, S_BlurMoCurves, Deep Glow & Drop Shadow, étalonnage 
           {
             name: 'DarkEdit2',
             wide: 0,
-            comments: `4. Dark – 'I AM YOU'
+            comments: `3. Dark – 'I AM YOU'
 
 Musique : Skins (Slowed).
 
@@ -97,6 +84,19 @@ Concept : La rencontre entre le Jonas du futur et celui du passé pour perpétue
 Style : Dramatique et narratif. Focus sur la dualité du personnage.
 
 Technique : Element 3D, CC Crimson, CC Wide Time, Slide transitions, Reverse, Face Tracking, S_BlurMoCurves.`
+          },
+          {
+            name: 'DarthVaderEdit',
+            wide: 0,
+            comments: `4. Darth Vader – '#1 MC oat'
+
+Musique : ZUMA JUMP (Super Slowed).
+
+Concept : La figure de l'ange déchu (réf. à Cabanel). La chute d'Anakin vers l'obscurité.
+
+Style : Sombre et puissant. Utilisation du Face Tracking pour renforcer l'intensité du regard.
+
+Technique : CC Crimson, Ripple Dissolve au drop, CC Wide Time, S_BlurMoCurves, Deep Glow & Drop Shadow.`
           },
           {
             name: 'EllieEdit',
@@ -112,17 +112,17 @@ Style : Cinématographique (barres noires), flashs inversés et grain à l'image
 Technique : Shatter (verre brisé sur 'Quick'), Motion Design (compteur d'aura), Face Tracking, S_BlurMoCurves.`
           },
           {
-            name: 'AizenEdit',
+            name: 'GoldenBrownEdit',
             wide: 0,
-            comments: `6. Aizen (Bleach) – 'Too Much Spiritual Pressure'
+            comments: `6. Knight Edit – 'Golden Brown'
 
-Musique : LUA NA PRAÇA.
+Musique : Golden Brown X Love Story (Slowed).
 
-Concept : Capturer l'aura de supériorité absolue d'Aizen.
+Concept : Succès viral (1.6M de vues). Esthétique médiévale sur un classique de 1981.
 
-Style : Profondeur de champ artificielle pour un rendu professionnel.
+Style : 'Chill' et décontracté. Focus sur l'image et la watermark personnelle.
 
-Technique : Caméra 3D, Image Transformer, CC Crimson, S_BlurMoCurves, Deep Glow & Drop Shadow.`
+Technique : S_Shake pour le mouvement organique, CC dorée, S_BlurMoCurves.`
           },
           {
             name: 'Gun-WooEdit',
@@ -138,22 +138,9 @@ Style : Utilisation du Rotoscope pour placer des panoramiques derrière le perso
 Technique : S_BlurMoCurves (zooms/slides), Face Tracking, Deep Glow & Drop Shadow.`
           },
           {
-            name: 'GoldenBrownEdit',
-            wide: 0,
-            comments: `8. Knight Edit – 'Golden Brown'
-
-Musique : Golden Brown X Love Story (Slowed).
-
-Concept : Succès viral (1.6M de vues). Esthétique médiévale sur un classique de 1981.
-
-Style : 'Chill' et décontracté. Focus sur l'image et la watermark personnelle.
-
-Technique : S_Shake pour le mouvement organique, CC dorée, S_BlurMoCurves.`
-          },
-          {
             name: 'LaraEdit',
             wide: 0,
-            comments: `9. Lara Croft – 'She's tuff asf'
+            comments: `8. Lara Croft – 'She's tuff asf'
 
 Musique : MINHA NOITE (Ultra Slowed).
 
@@ -166,7 +153,7 @@ Technique : Slide transitions, Face Tracking, S_BlurMoCurves, Deep Glow & Drop S
           {
             name: 'LegoStopMotion(Brickfilm)',
             wide: 1,
-            comments: `10. Brickfilm (2020) – 'Premiers pas en Stop-Motion'
+            comments: `9. Brickfilm (2020) – 'Premiers pas en Stop-Motion'
 
 Outils : Stop Motion Studio Pro.
 
