@@ -47,6 +47,19 @@ const db = new sqlite3.Database('portfolio.db', (err) => {
         console.log("No portfolio items found, inserting default items.");
         const items = [
           {
+            name: 'AizenEdit',
+            wide: 0,
+            comments: `AizenEdit – 'Sōsuke Aizen (Bleach) – Le plan parfait'
+
+Musique : Inconnu.
+
+Concept : La supériorité et le calme d'Aizen.
+
+Style : Épuré et intimidant.
+
+Technique : Étalonnage, transitions fluides.`
+          },
+          {
             name: 'BladeRunnerEdit',
             wide: 0,
             comments: `1. Blade Runner Remaster – 'Im literally Him'
