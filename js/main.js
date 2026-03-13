@@ -7,11 +7,13 @@ jQuery(document).ready(function($) {
 
           // data-scrollTo = section scrolling to name
           var scrollTo = $(this).attr('data-scrollTo');
+          var scrollBehavior = $(this).attr('data-scrollBehavior') || 'smooth';
           var $target = $('#' + scrollTo);
 
-          // Set a flag in sessionStorage to indicate the user clicked a scroll link.
+          // Set flags in sessionStorage to indicate the user clicked a scroll link.
           // This ensures that the auto-scroll on index.html ONLY happens after a manual click.
           sessionStorage.setItem('shouldScrollTo', scrollTo);
+          sessionStorage.setItem('scrollBehavior', scrollBehavior);
 
           // If the target exists on the page, animate scroll. Otherwise, let default link behavior happen.
           if ($target.length > 0) {
