@@ -466,6 +466,16 @@ nav {
     border: none;
 }
 
+.popup-icon img {
+    width: 60px;
+    height: 60px;
+    transition: transform 0.3s ease;
+}
+
+.popup-icon img:hover {
+    transform: scale(1.1);
+}
+
 .modal-btn img {
     width: 60px;
     height: 60px;

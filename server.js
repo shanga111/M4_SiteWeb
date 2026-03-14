@@ -39,7 +39,18 @@ const db = new sqlite3.Database('portfolio.db', (err) => {
       modal_id TEXT NOT NULL,
       video_preview_id TEXT NOT NULL,
       is_wide INTEGER DEFAULT 0,
-      comments TEXT DEFAULT ''
+      comments TEXT DEFAULT '',
+      date TEXT
+    )`);
+
+    // Create "messages" table for contact form (legacy support)
+    db.run(`CREATE TABLE IF NOT EXISTS messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      subject TEXT,
+      message TEXT NOT NULL,
+      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
 
     // Insert initial data (Portfolio ERACOM)
@@ -54,6 +65,7 @@ const db = new sqlite3.Database('portfolio.db', (err) => {
           {
             name: 'BladeRunnerEdit',
             wide: 0,
+            date: '06.12.2025',
             comments: `1. Blade Runner Remaster – 'Im literally Him'
 
 Musique : Tame Impala - Let It Happen (Slowed + Reverb).
@@ -67,6 +79,7 @@ Technique : Element 3D (textes), Deep Glow & Drop Shadow, Ripple Dissolve, CC Wi
           {
             name: 'DarkEdit',
             wide: 0,
+            date: '15.08.2025',
             comments: `2. Dark – 'The question is not where but when'
 
 Musique : Crystal Castles - Suffocation (Instrumental).
@@ -80,6 +93,7 @@ Technique : Face Tracking, S_BlurMoCurves, Deep Glow & Drop Shadow, étalonnage 
           {
             name: 'DarkEdit2',
             wide: 0,
+            date: '13.10.2025',
             comments: `3. Dark – 'I AM YOU'
 
 Musique : Skins (Slowed).
@@ -93,6 +107,7 @@ Technique : Element 3D, CC Crimson, CC Wide Time, Slide transitions, Reverse, Fa
           {
             name: 'DarthVaderEdit',
             wide: 0,
+            date: '10.11.2025',
             comments: `4. Darth Vader – '#1 MC oat'
 
 Musique : ZUMA JUMP (Super Slowed).
@@ -106,6 +121,7 @@ Technique : CC Crimson, Ripple Dissolve au drop, CC Wide Time, S_BlurMoCurves, D
           {
             name: 'EllieEdit',
             wide: 0,
+            date: '21.01.2026',
             comments: `5. Ellie (TLOU) – 'She's so Tuff'
 
 Musique : MONTAGEM FANTÁSTICA.
@@ -119,6 +135,7 @@ Technique : Shatter (verre brisé sur 'Quick'), Motion Design (compteur d'aura),
           {
             name: 'GoldenBrownEdit',
             wide: 0,
+            date: '23.08.2025',
             comments: `6. Knight Edit – 'Golden Brown'
 
 Musique : Golden Brown X Love Story (Slowed).
@@ -132,6 +149,7 @@ Technique : S_Shake pour le mouvement organique, CC dorée, S_BlurMoCurves.`
           {
             name: 'Gun-WooEdit',
             wide: 0,
+            date: '16.12.2025',
             comments: `7. Geon-Woo (Bloodhounds) – 'He's so tuff'
 
 Musique : MONTAGEM AROMA (Slowed).
@@ -145,6 +163,7 @@ Technique : S_BlurMoCurves (zooms/slides), Face Tracking, Deep Glow & Drop Shado
           {
             name: 'LaraEdit',
             wide: 0,
+            date: '15.02.2026',
             comments: `8. Lara Croft – 'She's tuff asf'
 
 Musique : MINHA NOITE (Ultra Slowed).
@@ -158,6 +177,7 @@ Technique : Slide transitions, Face Tracking, S_BlurMoCurves, Deep Glow & Drop S
           {
             name: 'AizenEdit',
             wide: 0,
+            date: '02.03.2026',
             comments: `9. Aizen (Bleach) – 'Too Much Spiritual Pressure'
 
 Musique : LUA NA PRAÇA.
@@ -171,6 +191,7 @@ Technique : Caméra 3D, Image Transformer, CC Crimson, S_BlurMoCurves, Deep Glow
           {
             name: 'LegoStopMotion(Brickfilm)',
             wide: 1,
+            date: '01.01.2020',
             comments: `10. Brickfilm (2020) – 'Premiers pas en Stop-Motion'
 
 Outils : Stop Motion Studio Pro.
@@ -181,7 +202,7 @@ Style : Animation image par image (Stop-motion).`
           }
         ];
 
-        const stmt = db.prepare("INSERT INTO products (name, image, video, modal_id, video_preview_id, is_wide, comments) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        const stmt = db.prepare("INSERT INTO products (name, image, video, modal_id, video_preview_id, is_wide, comments, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
         for (const item of items) {
           const name = item.name;
@@ -192,9 +213,10 @@ Style : Animation image par image (Stop-motion).`
             modalId: `modal-${name.replace(/[() ]/g, '')}`,
             videoPreviewId: `video-preview-${name.replace(/[() ]/g, '')}`,
             isWide: item.wide,
-            comments: item.comments || 'Edit TikTok réalisé en autodidacte (After Effects / CapCut).'
+            comments: item.comments || 'Edit TikTok réalisé en autodidacte (After Effects / CapCut).',
+            date: item.date || ''
           };
-          stmt.run(product.name, product.image, product.video, product.modalId, product.videoPreviewId, product.isWide, product.comments, (err) => {
+          stmt.run(product.name, product.image, product.video, product.modalId, product.videoPreviewId, product.isWide, product.comments, product.date, (err) => {
             if (err) {
               console.error(`Error inserting ${name}:`, err.message);
             }
@@ -234,6 +256,18 @@ app.get('/api/products', (req, res) => {
   });
 });
 
+app.post('/api/contact', (req, res) => {
+    const { name, email, subject, message } = req.body;
+    if (!name || !email || !message) {
+        return res.status(400).json({ error: 'Tous les champs obligatoires doivent être remplis.' });
+    }
+    const sql = 'INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)';
+    db.run(sql, [name, email, subject, message], function(err) {
+        if (err) res.status(500).json({ error: err.message });
+        else res.json({ message: 'Message envoyé avec succès!', id: this.lastID });
+    });
+});
+
 // --- Admin Endpoints ---
 app.post('/api/products', checkAdmin, (req, res) => {
     const { name, image, video, is_wide, comments } = req.body;
@@ -244,8 +278,8 @@ app.post('/api/products', checkAdmin, (req, res) => {
     const modal_id = `modal-${name.replace(/[()]/g, '')}`;
     const video_preview_id = `video-preview-${name.replace(/[()]/g, '')}`;
 
-    const sql = 'INSERT INTO products (name, image, video, modal_id, video_preview_id, is_wide, comments) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    db.run(sql, [name, image, video, modal_id, video_preview_id, is_wide || 0, comments || ''], function(err) {
+    const sql = 'INSERT INTO products (name, image, video, modal_id, video_preview_id, is_wide, comments, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    db.run(sql, [name, image, video, modal_id, video_preview_id, is_wide || 0, comments || '', req.body.date || ''], function(err) {
         if (err) res.status(500).json({ error: err.message });
         else res.json({ message: 'Projet ajouté avec succès!', id: this.lastID });
     });
@@ -262,9 +296,9 @@ app.put('/api/products/:id', checkAdmin, (req, res) => {
     const modal_id = `modal-${name.replace(/[()]/g, '')}`;
     const video_preview_id = `video-preview-${name.replace(/[()]/g, '')}`;
 
-    const sql = `UPDATE products SET name = ?, image = ?, video = ?, modal_id = ?, video_preview_id = ?, is_wide = ?, comments = ? WHERE id = ?`;
+    const sql = `UPDATE products SET name = ?, image = ?, video = ?, modal_id = ?, video_preview_id = ?, is_wide = ?, comments = ?, date = ? WHERE id = ?`;
 
-    db.run(sql, [name, image, video, modal_id, video_preview_id, is_wide || 0, comments || '', id], function(err) {
+    db.run(sql, [name, image, video, modal_id, video_preview_id, is_wide || 0, comments || '', req.body.date || '', id], function(err) {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
